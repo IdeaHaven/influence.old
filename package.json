@@ -1,6 +1,12 @@
 {
-  "name": "seed",
+  "name": "influence",
   "version": "0.1.0",
+  "author": "Gregory Hilkert <EpiphanyMachine@gmail.com>",
+  "description": "Explore the influence placed on our federal representatives.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EpiphanyMachine/influence.git"
+  },
   "dependencies": {
     "express": "~3.3.4"
   },
@@ -14,5 +20,9 @@
     "grunt-concurrent": "~0.3.0",
     "grunt-nodemon": "~0.0.8",
     "grunt-exec": "~0.4.2"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8"
   }
 }
