@@ -7,6 +7,7 @@ angular
     $routeProvider.when('/bill', {templateUrl: 'partials/bill.html', controller: 'BillCtrl'})
     $routeProvider.otherwise({redirectTo: '/individual'})
   ])
+  # set default headers to cors for api access to sunlight foundation
   .config(['$httpProvider', ($httpProvider) ->
     $httpProvider.defaults.useXDomain = true
     delete $httpProvider.defaults.headers.common['X-Requested-With']
