@@ -1,8 +1,9 @@
 # Controllers
 
 angular
-  .module('myApp.controllers', [])
-  .controller('MyCtrl1', [ ()->
-    ])
-  .controller('MyCtrl2', [ ()->
-    ])
+  .module('influences.controllers', [])
+  .controller('IndividualCtrl', ['$scope', ($scope)->
+    $scope.name = "hahah"
+  ])
+  # .controller('MyCtrl2', [ ()->
+  #   ])
