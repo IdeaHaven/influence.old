@@ -2,7 +2,10 @@
 
   <span>Zip Code: </span>
   <input size="5" name="zip" ng-model="zip" type="zip" value={{zip}} required>
-  <select ng-model="selected_rep" ng-options="rep.fullname for rep in reps"></select>
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary" ng-model="$parent.selected_rep" btn-radio='rep' ng-repeat="rep in reps">{{rep.fullname}}</button>
+  </div>
 
   <div ng-repeat="(prop, val) in selected_rep">
     <p>{{prop}}: {{val}}</p>
