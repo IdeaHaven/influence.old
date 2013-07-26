@@ -5,8 +5,8 @@ module.exports = (grunt)->
 
     coffee:
       # compileWithMaps:
-        # options:
-        #   sourceMap: true
+      #   options:
+      #     sourceMap: true
       compile:
         files:
           'server.js': 'src/coffee/node/server.coffee'  # 1:1 compile server file
