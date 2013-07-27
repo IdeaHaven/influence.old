@@ -6,9 +6,13 @@ describe('service', function() {
   beforeEach(module('influences.services'));
 
 
-  describe('version', function() {
-    it('should return current version', inject(function(version) {
-      expect(version).toEqual('0.1');
+  describe('Sunlight API', function() {
+
+    xit('should return reps based on a zip', inject(function(Api_sunlight_get) {
+      console.log(Api_sunlight_get);
+      Api_sunlight_get('legislators/locate?zip=10458', function(data){
+        expect(data.length).toEqual(5);
+      });
     }));
   });
 });

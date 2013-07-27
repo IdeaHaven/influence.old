@@ -2,29 +2,30 @@
 
 /* jasmine specs for controllers go here */
 
-describe('controllers', function() {
+describe('influences controllers', function() {
   beforeEach(module('influences.controllers', ['ui.bootstrap', 'influences.services']));
 
-  describe('IndividualCtrl', function() {
-    var scope, ctrl, service;
+  describe('IndividualCtrl', function(){
 
-    beforeEach(inject(function($rootScope, $controller, Api_sunlight_get) {
+    var scope, ctrl, service, $httpBackend;
+
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, Api_sunlight_get) {
+      console.log('*** IN INJECT!!***: ', Api_sunlight_get);
+      $httpBackend = _$httpBackend_;
+      // ignore for now... this is an example of how I might implement this later
+      // $httpBackend.expectGET('data/products.json').
+      //     respond([{name: 'Celeri'}, {name: 'Panais'}]);
+
       scope = $rootScope.$new();
-      ctrl = $controller('IndividualCtrl', {$scope: scope, Api_sunlight_get: Api_sunlight_get});
+      service = Api_sunlight_get;
+      ctrl = $controller('IndividualCtrl', {$scope: scope, Api_sunlight_get: service
+      });
     }));
 
-    it('should pull reps data from the API by zip', function() {
-      inject(function($rootScope, $controller) {
-        scope = $rootScope.$new();
-        ctrl = $controller("IndividualCtrl", {
-          $scope: scope
-        });
-      });
-      console.log('2Scope: ', scope);
-      scope.zip = 44313;
-      scope.get_rep_data_by_zip();
-      expect(scope.reps.length).toEqual(5);
+    xit('should create "products" model with 2 products fetched from xhr', function() {
+      console.log('*** IN TEST!!***: ', scope);
+      scope = {zip: 12345};
+      expect(scope.zip).toEqual(12345);
     });
-
   });
 });
