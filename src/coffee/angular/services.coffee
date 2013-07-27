@@ -10,7 +10,7 @@ angular
         url: "http://congress.api.sunlightfoundation.com/#{path}&apikey=83c0368c509f468e992218f41e6529d7"
         method: "GET"
       .success (data, status, headers, config)->
-        return data.results
+        callback data.results
       .error (data, status, headers, config)->
-        return status
+        console.log("Error pulling #{path} from Sunlight API!")
   ]

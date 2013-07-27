@@ -8,10 +8,11 @@ angular
 
     # Define Methods
     $scope.get_rep_data_by_zip = ()->
-      $scope.reps =  Api_sunlight_get "legislators/locate?zip=#{$scope.zip}" $scope.update_rep_data_by_zip
+      Api_sunlight_get "legislators/locate?zip=#{$scope.zip}", $scope.update_rep_data_by_zip
 
-    $scope.update_rep_data_by_zip = ()->
-      $scope.selected_rep = $scope.reps  # sets default selection for reps buttons
+    $scope.update_rep_data_by_zip = (data)->
+      $scope.reps = data
+      $scope.selected_rep = $scope.reps[0]  # sets default selection for reps buttons
       for rep in $scope.reps
         rep.fullname = "" + rep.title + " " + rep.first_name + " " + rep.last_name
 
