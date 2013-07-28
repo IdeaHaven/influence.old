@@ -20,7 +20,10 @@ angular
 
     # only do this if leadership roll is blank
     get_committees_data_by_selected_rep_id = ()->
-      Api_sunlight_get "committees?member_ids=#{$scope.selected_rep.bioguide_id}", callback_committees_data_by_selected_rep_id
+      if $scope.selected_rep.leadership_role is "Minority Leader" or "Majority Leader"
+        # there are no committees!
+      else
+        Api_sunlight_get "committees?member_ids=#{$scope.selected_rep.bioguide_id}", callback_committees_data_by_selected_rep_id
 
     callback_committees_data_by_selected_rep_id = (data)->
       $scope.selected_rep.committees = data
