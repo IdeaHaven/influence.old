@@ -1,14 +1,27 @@
 <div ng-controller="IndividualCtrl">
 
-  <span>Zip Code: </span>
-  <input size="5" name="zip" ng-model="zip" type="zip" value={{zip}} required>
+  <div class="row">
+    <span>Zip Code: </span>
+    <input size="5" name="zip" ng-model="zip" type="zip" value={{zip}} required>
 
-  <div class="btn-group">
-    <button type="button" class="btn btn-primary" ng-model="$parent.selected_rep" btn-radio='rep' ng-repeat="rep in reps">{{rep.fullname}}</button>
-  </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" ng-model="$parent.selected_rep" btn-radio='rep' ng-repeat="rep in reps">{{rep.fullname}}</button>
+    </div>
+  </row>
 
-  <div ng-repeat="(prop, val) in selected_rep">
-    <p>{{prop}}: {{val}}</p>
+  <div class="row">
+    <div class="col-lg-6">
+      <h1>Overview</h1>
+      <div ng-repeat="(prop, val) in selected_rep.overview">
+        <p>{{prop}}: {{val}}</p>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h1> Committees </h1>
+      <div ng-repeat="committee in selected_rep.committees">
+        <p>{{committee.name}}</p>
+      </div>
+    </div>
   </div>
 
 </div>
