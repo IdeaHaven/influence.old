@@ -2,6 +2,7 @@
 
 angular
   .module('influences.services', [])
+  .value('version', '0.1')
   .factory 'Api_sunlight_get', ['$http', ($http)->
     return (path, callback)->
       $http
