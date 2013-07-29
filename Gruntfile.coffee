@@ -36,10 +36,8 @@ module.exports = (grunt)->
 
     stylus:
       compile:
-        options:
-          import: ['nib']
         files:
-          'app/css/app.css': 'src/stylus/app.styl'  # 1:1 compile
+          'app/css/app.css': ['src/stylus/*.styl']  # concat and compile
           'app/css/bootstrap.css': 'src/stylus/bootstrap/bootstrap.styl'  # 1:1 compile
           'app/css/responsive.css': 'src/stylus/bootstrap/responsive.styl'  # 1:1 compile
 
