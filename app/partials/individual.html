@@ -9,19 +9,19 @@
     </div>
   </div>
 
+
   <!-- a scope variable can't be passed into the sub_view attribute directive so switch must be used -->
   <ng-switch on="sub_view">
     <div ng-switch-when="loading">
-      <div sub_view="individual-loading"></div>
-    </div>
+      <sub-view template="individual-loading"></sub-view>    </div>
     <div ng-switch-when="house">
-      <div sub_view="individual-house"></div>
+      <sub-view template="individual-house"></sub-view>
     </div>
     <div ng-switch-when="house-leader">
-      <div sub_view="individual-house-leader"></div>
+      <sub-view template="individual-house-leader"></sub-view>
     </div>
     <div ng-switch-when="senate">
-      <div sub_view="individual-senate"></div>
+      <sub-view template="individual-senate"></sub-view>
     </div>
   </ng-switch>
 

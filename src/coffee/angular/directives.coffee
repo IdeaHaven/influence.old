@@ -7,8 +7,9 @@ angular
       elm.text(version)
   ])
   .directive('subView', [()->
-    restrict: 'A'
+    restrict: 'E'
     # this requires at least angular 1.1.4 (currently unstable)
-    templateUrl: (notsurewhatthisis, attr)->
-      "partials/#{attr.subView}.html"
+    templateUrl: (notsurewhatthisis, attrs)->
+      "partials/#{attrs.template}.html"
   ])
+  
