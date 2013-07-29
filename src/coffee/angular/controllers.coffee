@@ -5,13 +5,14 @@ angular
   .controller('IndividualCtrl', ['$scope', 'Api_sunlight_get', ($scope, Api_sunlight_get)->
     # set default variables
     $scope.zip = 94102  # set default zip if one is not chosen
-    $scope.sub_view = 'individual-house' # set loading view until rep data is loaded
+    $scope.sub_view = 'loading' # set loading view until rep data is loaded
 
     # Define Methods
     get_rep_data_by_zip = ()->
       Api_sunlight_get "legislators/locate?zip=#{$scope.zip}", callback_rep_data_by_zip
 
     callback_rep_data_by_zip = (data)->
+      $scope.sub_view = 'loading' # set loading view until rep data is loaded
       $scope.reps = data
       for rep in $scope.reps
         rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
