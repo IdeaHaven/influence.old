@@ -18,7 +18,6 @@ angular
         rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
         rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
       $scope.selected_rep = $scope.reps[0]  # sets default selection for reps buttons
-      set_view_by_selected_rep_role()
       set_watchers_for_dependent_data()
 
     # only do this if leadership roll is null
@@ -46,6 +45,7 @@ angular
         $scope.sub_view = 'senate'
 
     set_watchers_for_dependent_data = ()->
+      $scope.$watch 'selected_rep', set_view_by_selected_rep_role
       $scope.$watch 'selected_rep', get_committees_data_by_selected_rep_id
       $scope.$watch 'selected_rep', get_sponsored_bills_data_by_selected_rep_id
 
