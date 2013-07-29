@@ -14,7 +14,6 @@ describe('influences controllers', function() {
     var scope, ctrl, service, $httpBackend;
 
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller, Api_sunlight_get) {
-      console.log('*** IN INJECT!!***');
       $httpBackend = _$httpBackend_;
       // ignore for now... this is an example of how I might implement this later
       // $httpBackend.expectGET('data/products.json').
@@ -29,7 +28,6 @@ describe('influences controllers', function() {
     }));
 
     it('should set the correct zip value', function() {
-      console.log('*** IN TEST!!***: ');
       expect(scope.zip).toEqual(94102);
     });
   });
