@@ -12,11 +12,12 @@ angular
 
     callback_rep_data_by_zip = (data)->
       $scope.reps = data
-      $scope.selected_rep = $scope.reps[0]  # sets default selection for reps buttons
       for rep in $scope.reps
         rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
         rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
         rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
+      $scope.selected_rep = $scope.reps[0]  # sets default selection for reps buttons
+      set_watchers_for_dependent_data()
 
     # only do this if leadership roll is blank
     get_committees_data_by_selected_rep_id = ()->
@@ -36,13 +37,13 @@ angular
       $scope.selected_rep.bills = $scope.selected_rep.bills or {}
       $scope.selected_rep.bills.sponsored = data
 
-    # watchers
-    $scope.$watch 'zip', get_rep_data_by_zip
-    $scope.$watch 'selected_rep', get_committees_data_by_selected_rep_id
-    $scope.$watch 'selected_rep', get_sponsored_bills_data_by_selected_rep_id
+    set_watchers_for_dependent_data = ()->
+      $scope.$watch 'selected_rep', get_committees_data_by_selected_rep_id
+      $scope.$watch 'selected_rep', get_sponsored_bills_data_by_selected_rep_id
 
-    # initial run
-    get_rep_data_by_zip()
+    # independent watchers
+    $scope.$watch 'zip', get_rep_data_by_zip
+
 
   ])
   .controller('BillCtrl', ['$scope', ($scope)->
