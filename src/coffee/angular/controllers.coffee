@@ -33,7 +33,7 @@ angular
           Api_get.congress "committees?member_ids=#{$scope.selected_rep.overview.bioguide_id}", callback_committees_data_by_selected_rep_id
 
     callback_committees_data_by_selected_rep_id = (data)->
-        $scope.selected_rep.committees = data
+      $scope.selected_rep.committees = data
 
     get_sponsored_bills_data_by_selected_rep_id = ()->
       if not $scope.selected_rep.bills
@@ -70,16 +70,31 @@ angular
         $scope.selected_rep.bills.wdsponsor = data
 
     get_transparencydata_id_by_selected_rep_bioguide_id = ()->
-    #   Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.bioguide_id}", callback_transparencydata_id_by_rep_bioguide_id
+      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}", callback_transparencydata_id_by_rep_bioguide_id
 
     callback_transparencydata_id_by_rep_bioguide_id = (data)->
-    #   console.log data
-    #   $scope.selected_rep.transparencydata_id
+      $scope.selected_rep.transparencydata_id = data.id
 
-    #   run_once = run_once or false
-    #   if not run_once
-    #     set_watchers_for_transparencydata_id_dependent_data() # only set the watchers once
-    #     run_once = true
+      run_once = run_once or false
+      if not run_once
+        set_watchers_for_transparencydata_id_dependent_data() # only set the watchers once
+        run_once = true
+
+    get_contributors_by_selected_rep_transparencydata_id = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors.json?cycle=2012&limit=10", callback_contributors_by_selected_rep_transparencydata_id
+
+    callback_contributors_by_selected_rep_transparencydata_id = (data)->
+      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+      $scope.selected_rep.funding.contributors = data.json
+
+    get_industries_by_selected_rep_transparencydata_id = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/industries.json?cycle=2012&limit=10", callback_industries_by_selected_rep_transparencydata_id
+
+    callback_industries_by_selected_rep_transparencydata_id = (data)->
+      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+      console.log 'api: ', data
+      $scope.selected_rep.funding.industries = data.json
+      console.log 'reps: ',$scope.reps
 
     set_view_by_selected_rep_role = ()->
       if $scope.selected_rep.overview.chamber is 'House' and not $scope.selected_rep.overview.leadership_role
@@ -92,17 +107,18 @@ angular
     set_watchers_for_bioguide_id_dependent_data = ()->
       $scope.$watch 'selected_rep', set_view_by_selected_rep_role
       $scope.$watch 'selected_rep', get_committees_data_by_selected_rep_id
+      # $scope.$watch 'selected_rep', get_votes_data_by_selected_rep_id
       $scope.$watch 'selected_rep', get_sponsored_bills_data_by_selected_rep_id
       $scope.$watch 'selected_rep', get_cosponsored_bills_data_by_selected_rep_id
       $scope.$watch 'selected_rep', get_wdsponsor_bills_data_by_selected_rep_id
-    #   $scope.$watch 'selected_rep', get_transparencydata_id_by_selected_rep_bioguide_id
+      $scope.$watch 'selected_rep', get_transparencydata_id_by_selected_rep_bioguide_id
 
     set_watchers_for_transparencydata_id_dependent_data = ()->
-      # $scope.$watch 'selected_rep.transparencydata_id', get_transparencydata_id_by_rep_bioguide_id
+      $scope.$watch 'selected_rep.transparencydata_id', get_contributors_by_selected_rep_transparencydata_id
+      $scope.$watch 'selected_rep.transparencydata_id', get_industries_by_selected_rep_transparencydata_id
 
     # independent watchers
     $scope.$watch 'zip', get_rep_data_by_zip
-
 
   ])
   .controller('BillCtrl', ['$scope', ($scope)->

@@ -13,11 +13,15 @@ angular
       .error (data, status, headers, config)->
         console.log("Error pulling #{path} from Sunlight Congress v3 API!")
     influence: (path, callback)->
+      apiurl = "http://transparencydata.com/api/1.0/#{path}&apikey=83c0368c509f468e992218f41e6529d7"
       $http
-        url: "http://transparencydata.com/api/1.0/#{path}&apikey=83c0368c509f468e992218f41e6529d7"
         method: "GET"
+        url: "http://query.yahooapis.com/v1/public/yql"
+        params:
+          q: "select * from json where url=\"#{apiurl}\""
+          format: "json"
       .success (data, status, headers, config)->
-        callback data.results
+        callback data.query.results.json
       .error (data, status, headers, config)->
-        console.log("Error pulling #{path} from TransparencyData API!")
+        console.log("Error pulling votes from NYT API!")
   ]
