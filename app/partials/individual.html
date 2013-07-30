@@ -1,29 +1,35 @@
 <div ng-controller="IndividualCtrl">
 
-  <div class="row-fluid span12">
-    <span>Zip Code: </span>
-    <input class="zip" name="zip" ng-model="zip" type="zip" value={{zip}} required>
+  <div class="row-fluid">
+    <div class="span12">
+      <span>Zip Code: </span>
+      <input class="zip" name="zip" ng-model="zip" type="zip" value={{zip}} required>
 
-    <div class="reps-list btn-group">
-      <button type="button" class="btn btn-primary" ng-model="$parent.selected_rep" btn-radio='rep' ng-repeat="rep in reps">{{rep.fullname}}</button>
+      <div class="reps-list btn-group">
+        <button type="button" class="btn btn-primary" ng-model="$parent.selected_rep" btn-radio='rep' ng-repeat="rep in reps">{{rep.fullname}}</button>
+      </div>
     </div>
   </div>
 
 
   <!-- a scope variable can't be passed into the sub_view attribute directive so switch must be used -->
-  <ng-switch on="sub_view_rep_type">
-    <div ng-switch-when="loading">
-      <sub-view template="loading"></sub-view>
+  <div class="row-fluid">
+    <div class="container span12">
+      <ng-switch on="sub_view_rep_type">
+        <div ng-switch-when="loading">
+          <sub-view template="loading"></sub-view>
+        </div>
+        <div ng-switch-when="house">
+          <sub-view template="individual/house"></sub-view>
+        </div>
+        <div ng-switch-when="house-leader">
+          <sub-view template="individual/house-leader"></sub-view>
+        </div>
+        <div ng-switch-when="senate">
+          <sub-view template="individual/senate"></sub-view>
+        </div>
+      </ng-switch>
     </div>
-    <div ng-switch-when="house">
-      <sub-view template="individual/house"></sub-view>
-    </div>
-    <div ng-switch-when="house-leader">
-      <sub-view template="individual/house-leader"></sub-view>
-    </div>
-    <div ng-switch-when="senate">
-      <sub-view template="individual/senate"></sub-view>
-    </div>
-  </ng-switch>
+  </div>
 
 </div>

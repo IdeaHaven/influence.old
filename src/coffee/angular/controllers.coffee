@@ -22,7 +22,7 @@ angular
 
       run_once = run_once or false
       if not run_once
-        set_watchers_for_dependent_data() # only set the watchers once
+        set_watchers_for_bioguide_id_dependent_data() # only set the watchers once
         run_once = true
 
     # only do this if leadership roll is null
@@ -37,27 +37,43 @@ angular
       Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_sponsored_bills_data_by_selected_rep_id
 
     callback_sponsored_bills_data_by_selected_rep_id = (data)->
-      console.log 'spon: ', data
       $scope.selected_rep.bills = $scope.selected_rep.bills or {}
       $scope.selected_rep.bills.sponsored = data
+      for bill in $scope.selected_rep.bills.sponsored
+        if not bill.short_title
+          bill.short_title = bill.official_title
 
     get_cosponsored_bills_data_by_selected_rep_id = ()->
-      # Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_cosponsored_bills_data_by_selected_rep_id
+      Api_get.congress "bills?cosponsor_ids=#{$scope.selected_rep.bioguide_id}", callback_cosponsored_bills_data_by_selected_rep_id
 
     callback_cosponsored_bills_data_by_selected_rep_id = (data)->
-      # console.log 'cospon: ', data
+      $scope.selected_rep.bills = $scope.selected_rep.bills or {}
+      $scope.selected_rep.bills.cosponsored = data
+      for bill in $scope.selected_rep.bills.cosponsored
+        if not bill.short_title
+          bill.short_title = bill.official_title
 
-    get_desponsored_bills_data_by_selected_rep_id = ()->
-      # Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_desponsored_bills_data_by_selected_rep_id
+    get_wdsponsor_bills_data_by_selected_rep_id = ()->
+      Api_get.congress "bills?withdrawn_cosponsor_ids=#{$scope.selected_rep.bioguide_id}", callback_wdsponsor_bills_data_by_selected_rep_id
 
-    callback_desponsored_bills_data_by_selected_rep_id = (data)->
-      # console.log 'despon: ', data
+    callback_wdsponsor_bills_data_by_selected_rep_id = (data)->
+      $scope.selected_rep.bills = $scope.selected_rep.bills or {}
+      $scope.selected_rep.bills.wdsponsor = data
+      for bill in $scope.selected_rep.bills.wdcosponsor
+        if not bill.short_title
+          bill.short_title = bill.official_title
 
-    get_transparencydata_id_by_rep_bioguide_id = ()->
-      # Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.bioguide_id}", callback_transparencydata_id_by_rep_bioguide_id
+    get_transparencydata_id_by_selected_rep_bioguide_id = ()->
+      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.bioguide_id}", callback_transparencydata_id_by_rep_bioguide_id
 
     callback_transparencydata_id_by_rep_bioguide_id = (data)->
-      # console.log data
+      console.log data
+      $scope.selected_rep.transparencydata_id
+
+      run_once = run_once or false
+      if not run_once
+        set_watchers_for_transparencydata_id_dependent_data() # only set the watchers once
+        run_once = true
 
     set_view_by_selected_rep_role = ()->
       if $scope.selected_rep.chamber is 'House' and not $scope.selected_rep.leadership_role
@@ -67,13 +83,16 @@ angular
       else if $scope.selected_rep.chamber is 'Senate'
         $scope.sub_view_rep_type = 'senate'
 
-    set_watchers_for_dependent_data = ()->
+    set_watchers_for_bioguide_id_dependent_data = ()->
       $scope.$watch 'selected_rep', set_view_by_selected_rep_role
       $scope.$watch 'selected_rep', get_committees_data_by_selected_rep_id
       $scope.$watch 'selected_rep', get_sponsored_bills_data_by_selected_rep_id
-      # $scope.$watch 'selected_rep', get_cosponsored_bills_data_by_selected_rep_id
-      # $scope.$watch 'selected_rep', get_desponsored_bills_data_by_selected_rep_id
-      # $scope.$watch 'selected_rep', get_transparencydata_id_by_rep_bioguide_id
+      $scope.$watch 'selected_rep', get_cosponsored_bills_data_by_selected_rep_id
+      $scope.$watch 'selected_rep', get_wdsponsor_bills_data_by_selected_rep_id
+      $scope.$watch 'selected_rep', get_transparencydata_id_by_selected_rep_bioguide_id
+
+    set_watchers_for_transparencydata_id_dependent_data = ()->
+      # $scope.$watch 'selected_rep.transparencydata_id', get_transparencydata_id_by_rep_bioguide_id
 
     # independent watchers
     $scope.$watch 'zip', get_rep_data_by_zip
