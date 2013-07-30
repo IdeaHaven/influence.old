@@ -2,14 +2,14 @@
 
 angular
   .module('influences.controllers', ['ui.bootstrap', 'influences.services'])
-  .controller('IndividualCtrl', ['$scope', 'Api_sunlight_get', ($scope, Api_sunlight_get)->
+  .controller('IndividualCtrl', ['$scope', 'Api_get', ($scope, Api_get)->
     # set default variables
     $scope.zip = 94102  # set default zip if one is not chosen
     $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
 
     # Define Methods
     get_rep_data_by_zip = ()->
-      Api_sunlight_get "legislators/locate?zip=#{$scope.zip}", callback_rep_data_by_zip
+      Api_get.congress "legislators/locate?zip=#{$scope.zip}", callback_rep_data_by_zip
 
     callback_rep_data_by_zip = (data)->
       $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
@@ -28,18 +28,36 @@ angular
     # only do this if leadership roll is null
     get_committees_data_by_selected_rep_id = ()->
       if not $scope.selected_rep.leadership_role
-        Api_sunlight_get "committees?member_ids=#{$scope.selected_rep.bioguide_id}", callback_committees_data_by_selected_rep_id
+        Api_get.congress "committees?member_ids=#{$scope.selected_rep.bioguide_id}", callback_committees_data_by_selected_rep_id
 
     callback_committees_data_by_selected_rep_id = (data)->
       $scope.selected_rep.committees = data
 
     get_sponsored_bills_data_by_selected_rep_id = ()->
-      Api_sunlight_get "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_sponsored_bills_data_by_selected_rep_id
+      Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_sponsored_bills_data_by_selected_rep_id
 
     callback_sponsored_bills_data_by_selected_rep_id = (data)->
-      console.log data
+      console.log 'spon: ', data
       $scope.selected_rep.bills = $scope.selected_rep.bills or {}
       $scope.selected_rep.bills.sponsored = data
+
+    get_cosponsored_bills_data_by_selected_rep_id = ()->
+      # Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_cosponsored_bills_data_by_selected_rep_id
+
+    callback_cosponsored_bills_data_by_selected_rep_id = (data)->
+      # console.log 'cospon: ', data
+
+    get_desponsored_bills_data_by_selected_rep_id = ()->
+      # Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.bioguide_id}", callback_desponsored_bills_data_by_selected_rep_id
+
+    callback_desponsored_bills_data_by_selected_rep_id = (data)->
+      # console.log 'despon: ', data
+
+    get_transparencydata_id_by_rep_bioguide_id = ()->
+      # Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.bioguide_id}", callback_transparencydata_id_by_rep_bioguide_id
+
+    callback_transparencydata_id_by_rep_bioguide_id = (data)->
+      # console.log data
 
     set_view_by_selected_rep_role = ()->
       if $scope.selected_rep.chamber is 'House' and not $scope.selected_rep.leadership_role
@@ -53,6 +71,9 @@ angular
       $scope.$watch 'selected_rep', set_view_by_selected_rep_role
       $scope.$watch 'selected_rep', get_committees_data_by_selected_rep_id
       $scope.$watch 'selected_rep', get_sponsored_bills_data_by_selected_rep_id
+      # $scope.$watch 'selected_rep', get_cosponsored_bills_data_by_selected_rep_id
+      # $scope.$watch 'selected_rep', get_desponsored_bills_data_by_selected_rep_id
+      # $scope.$watch 'selected_rep', get_transparencydata_id_by_rep_bioguide_id
 
     # independent watchers
     $scope.$watch 'zip', get_rep_data_by_zip
