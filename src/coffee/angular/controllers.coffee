@@ -5,21 +5,25 @@ angular
   .controller('IndividualCtrl', ['$scope', 'Api_sunlight_get', ($scope, Api_sunlight_get)->
     # set default variables
     $scope.zip = 94102  # set default zip if one is not chosen
-    $scope.sub_view = 'loading' # set loading view until rep data is loaded
+    $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
 
     # Define Methods
     get_rep_data_by_zip = ()->
       Api_sunlight_get "legislators/locate?zip=#{$scope.zip}", callback_rep_data_by_zip
 
     callback_rep_data_by_zip = (data)->
-      $scope.sub_view = 'loading' # set loading view until rep data is loaded
+      $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
       $scope.reps = data
       for rep in $scope.reps
         rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
         rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
         rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
       $scope.selected_rep = $scope.reps[0]  # sets default selection for reps buttons
-      set_watchers_for_dependent_data()
+
+      run_once = run_once or false
+      if not run_once
+        set_watchers_for_dependent_data() # only set the watchers once
+        run_once = true
 
     # only do this if leadership roll is null
     get_committees_data_by_selected_rep_id = ()->
@@ -39,11 +43,11 @@ angular
 
     set_view_by_selected_rep_role = ()->
       if $scope.selected_rep.chamber is 'House' and not $scope.selected_rep.leadership_role
-        $scope.sub_view = 'house'
-      if $scope.selected_rep.chamber is 'House' and $scope.selected_rep.leadership_role
-        $scope.sub_view = 'house-leader'
-      if $scope.selected_rep.chamber is 'Senate'
-        $scope.sub_view = 'senate'
+        $scope.sub_view_rep_type = 'house'
+      else if $scope.selected_rep.chamber is 'House' and $scope.selected_rep.leadership_role
+        $scope.sub_view_rep_type = 'house-leader'
+      else if $scope.selected_rep.chamber is 'Senate'
+        $scope.sub_view_rep_type = 'senate'
 
     set_watchers_for_dependent_data = ()->
       $scope.$watch 'selected_rep', set_view_by_selected_rep_role

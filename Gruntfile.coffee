@@ -53,7 +53,7 @@ module.exports = (grunt)->
         options:
           livereload: true  # default port 35729
       html:
-        files: ['app/*.html', 'app/partials/*.html', 'app/img/*.*']
+        files: ['app/*.html', 'app/partials/**/*.html', 'app/img/*.*']
         options:
           livereload: true  # default port 35729
 
