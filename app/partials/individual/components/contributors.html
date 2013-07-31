@@ -1,7 +1,4 @@
 <div class="ind-data">
   <h1> Top Contributors </h1>
-  <div ng-repeat="contributor in selected_rep.funding.contributors">
-    <p>{{contributor.name}}: {{contributor.total_amount}}</p>
-  </div>
-  <d3-funding val="selected_rep.funding.contributors"></d3-funding>
+  <d3-funding class="d3" data="selected_rep.funding.contributors" number="total_amount" text="name"></d3-funding>
 </div>

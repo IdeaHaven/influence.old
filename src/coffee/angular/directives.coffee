@@ -13,34 +13,44 @@ angular
       "partials/#{attrs.template}.html"
   ])
   .directive('d3Funding', [()->
-    margin = 20
-    width = 400 - .5 - margin
-    height = 400 - .5 - margin
-    color = d3.interpolateRgb "#f77", "#77f"
 
     restrict: 'E'
     scope:
-      val: '='
-    link: (scope, element, attrs)->
+      data: '='
 
-      # setup d3 svg object
+    link: (scope, element, attrs)->
       canvas = d3.select(element[0])
         .append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", "100%")
+        .attr("height", 300) # 10 items x 30px height each
 
-      # scope.$watch 'val', (newVal, oldVal)->
-      #   vis.selectAll('*').remove()
-      #   if not newVal
-      #     return
+      scope.$watch 'data', (newVals, oldVals)->
+        canvas.selectAll('*').remove()
+        if not newVals
+          return  # if there is no data after the val is changed
 
-      circle = canvas.append("circle")
-        .attr("cx", 50)
-        .attr("cy", 50)
-        .attr("r", 50)
-        .attr("fill", "red")
+        # find width and max for scaling
+        width = d3.select(element[0])[0][0].offsetWidth
+        max = Math.max.apply(Math, newVals.map(((val)-> val[attrs.number])))
 
-      console.log scope.$parent.$parent
+        canvas.selectAll('rect')
+          .data(newVals)
+          .enter()
+            .append("rect")
+            .attr("fill", "DarkSalmon")
+            .attr("height", 26)
+            .attr("width", 0)
+            .attr("y", ((d, i)-> i * 30) )
+            .transition()
+              .duration(1000)
+              .attr("width", ((d)-> d[attrs.number] / (max/width)) )
 
-
+        canvas.selectAll('text')
+          .data(newVals)
+          .enter()
+            .append("text")
+            .attr("fill", "Black")
+            .attr("y", ((d, i)-> i * 30 + 18) )
+            .attr("x", 10)
+            .text( ((d)-> "$#{Math.round(d[attrs.number]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}: #{d[attrs.text]}") )
   ])

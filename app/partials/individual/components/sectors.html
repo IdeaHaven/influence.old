@@ -1,6 +1,4 @@
 <div class="ind-data">
   <h1> Top Sectors </h1>
-  <div ng-repeat="sector in selected_rep.funding.sectors">
-    <p>{{sector.sector}}: {{sector.amount}}</p>
-  </div>
+  <d3-funding class="d3" data="selected_rep.funding.sectors" number="amount" text="sector"></d3-funding>
 </div>

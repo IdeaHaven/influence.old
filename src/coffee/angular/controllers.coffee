@@ -99,9 +99,7 @@ angular
 
     callback_sectors_by_selected_rep_transparencydata_id = (data)->
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
-      console.log 'api: ', data
       $scope.selected_rep.funding.sectors = data.json
-      console.log 'reps: ',$scope.reps
 
     set_view_by_selected_rep_role = ()->
       if $scope.selected_rep.overview.chamber is 'House' and not $scope.selected_rep.overview.leadership_role
