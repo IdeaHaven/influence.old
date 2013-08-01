@@ -101,6 +101,20 @@ angular
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
       $scope.selected_rep.funding.sectors = data.json
 
+    get_local_breakdown_by_selected_rep_transparencydata_id = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/local_breakdown.json?cycle=2012&limit=10", callback_local_breakdown_by_selected_rep_transparencydata_id
+
+    callback_local_breakdown_by_selected_rep_transparencydata_id = (data)->
+      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+      $scope.selected_rep.funding.local_breakdown = data
+
+    get_type_breakdown_by_selected_rep_transparencydata_id = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/type_breakdown.json?cycle=2012&limit=10", callback_type_breakdown_by_selected_rep_transparencydata_id
+
+    callback_type_breakdown_by_selected_rep_transparencydata_id = (data)->
+      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+      $scope.selected_rep.funding.type_breakdown = data
+
     set_view_by_selected_rep_role = ()->
       if $scope.selected_rep.overview.chamber is 'House' and not $scope.selected_rep.overview.leadership_role
         $scope.sub_view_rep_type = 'house'
@@ -122,6 +136,8 @@ angular
       $scope.$watch 'selected_rep.transparencydata_id', get_contributors_by_selected_rep_transparencydata_id
       $scope.$watch 'selected_rep.transparencydata_id', get_industries_by_selected_rep_transparencydata_id
       $scope.$watch 'selected_rep.transparencydata_id', get_sectors_by_selected_rep_transparencydata_id
+      $scope.$watch 'selected_rep.transparencydata_id', get_local_breakdown_by_selected_rep_transparencydata_id
+      $scope.$watch 'selected_rep.transparencydata_id', get_type_breakdown_by_selected_rep_transparencydata_id
 
     # independent watchers
     $scope.$watch 'zip', get_rep_data_by_zip
