@@ -111,22 +111,26 @@ angular
           canvas = canvas_containger
             .attr("height", radius*2)
             .append("g")
-            .attr("transform", "translate(" + radius + "," + radius + ")");
+            .attr("transform", "translate(" + radius + "," + radius + ")")
 
           g = canvas.selectAll(".arc")
-            .data(pie(munged_data))
-            .enter().append("g")
-            .attr("class", "arc");
+            .data( pie(munged_data) )
+            .enter()
+              .append("g")
+              .attr("class", "arc")
 
           g.append("path")
             .attr("d", arc)
-            .style("fill", ((d, i)-> color(i)) );
+            .style("fill", "white")
+            .transition()
+              .duration(1000)
+              .style("fill", ((d, i)-> color(i)) )
 
           g.append("text")
             .attr("transform", ((d, i)-> "translate(" + arc.centroid(d) + ")") )
             .attr("dy", ".35em")
             .style("text-anchor", "middle")
-            .text( ((d, i)-> attrs["property#{i}"]) );
+            .text( ((d, i)-> attrs["property#{i}"]) )
 
           g.append("text")
             .attr("transform", "translate(#{-1 * radius / 5},5)")
