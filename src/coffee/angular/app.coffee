@@ -3,9 +3,10 @@
 angular
   .module('influences', ['influences.filters', 'influences.services', 'influences.directives', 'influences.controllers'])
   .config(['$routeProvider', ($routeProvider)->
+    $routeProvider.when('/overview', {templateUrl: 'partials/overview.html', controller: 'OverviewCtrl'})
     $routeProvider.when('/individual', {templateUrl: 'partials/individual.html', controller: 'IndividualCtrl'})
     $routeProvider.when('/bill', {templateUrl: 'partials/bill.html', controller: 'BillCtrl'})
-    $routeProvider.otherwise({redirectTo: '/individual'})
+    $routeProvider.otherwise({redirectTo: '/overview'})
   ])
   # set default headers to cors for api access to sunlight foundation
   .config(['$httpProvider', ($httpProvider) ->

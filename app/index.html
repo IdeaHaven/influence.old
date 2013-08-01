@@ -10,9 +10,10 @@
 </head>
 <body ng-cloak class='container-fluid'>
 
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#/individual">Individual</a></li>
-    <li><a href="#/bill">Bill</a></li>
+  <ul class="nav nav-tabs" ng-controller="NavCtrl">
+    <li ng-class="navClass('overview')"><a href="#/overview">Overview</a></li>
+    <li ng-class="navClass('individual')"><a href="#/individual">Individual</a></li>
+    <li ng-class="navClass('bill')"><a href="#/bill">Bill</a></li>
   </ul>
 
   <div ng-view></div>
