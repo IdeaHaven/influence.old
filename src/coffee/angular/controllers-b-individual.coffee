@@ -1,7 +1,7 @@
 # Controllers
 
 angular
-  .module('influences.controllers', ['ui.bootstrap', 'influences.services'])
+  .module('influences.controllers')
   .controller('IndividualCtrl', ['$scope', 'Api_get', ($scope, Api_get)->
     # set default variables
     $scope.zip = 94102  # set default zip if one is not chosen
@@ -142,7 +142,4 @@ angular
     # independent watchers
     $scope.$watch 'zip', get_rep_data_by_zip
 
-  ])
-  .controller('BillCtrl', ['$scope', ($scope)->
-    $scope.name = "hahah"
   ])
