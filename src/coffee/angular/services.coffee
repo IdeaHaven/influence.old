@@ -2,7 +2,15 @@
 
 angular
   .module('influences.services', [])
-  .value('version', '0.1')
+  .value('version', production: '0.1')
+  .value('data',
+    source:
+      url: "http://sunlightfoundation.com/"
+      name: "Sunlight Foundation"
+    license:
+      url: "http://sunlightlabs.github.io/datacommons/"
+      name: "Various"
+  )
   .factory 'Api_get', ['$http', ($http)->
     congress: (path, callback)->
       $http

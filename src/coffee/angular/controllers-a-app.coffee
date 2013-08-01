@@ -6,3 +6,8 @@ angular
     $scope.navClass = (page)->
       if page is $location.path().substring(1) then 'active' else ''
   ])
+  .controller('AppCtrl', ['$scope', 'version', 'data', ($scope, version, data)->
+    $scope.version = version
+    $scope.source = data.source
+    $scope.license = data.license
+  ])

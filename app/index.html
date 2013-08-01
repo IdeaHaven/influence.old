@@ -18,6 +18,8 @@
 
   <div ng-view></div>
 
+  <div ng-controller="AppCtrl" class="footer">Data Source: <a href={{source.url}} target="_blank">{{source.name}}</a> | Data Licence: <a href={{license.url}} target="_blank">{{license.name}}</a> | App version: {{version.production}}</div>
+
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   -->
