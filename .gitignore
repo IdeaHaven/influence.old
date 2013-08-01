@@ -2,3 +2,4 @@ logs/*
 !.gitkeep
 app/js/*
 app/css/*
+server.js
