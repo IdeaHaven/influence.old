@@ -26,6 +26,11 @@ describe('my app', function() {
         toMatch(/Zip/);
     });
 
+    it('should change the data when a new zip is entered', function() {
+      expect(element('[ng-view] h1:first').text()).toMatch(/Nancy Pelosi/);
+      input('zip').enter('44313');
+      expect(element('[ng-view] h1:first').text()).toMatch(/David/);
+    });
   });
 
 
