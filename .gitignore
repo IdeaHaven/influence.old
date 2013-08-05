@@ -3,5 +3,5 @@ logs/*
 app/js/*
 app/css/*
 server.js
-test/e2e/*.js
-test/unit/*.js
+test/e2e/scenarios.js
+test/unit/compiledSpec.js

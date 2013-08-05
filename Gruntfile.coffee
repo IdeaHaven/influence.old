@@ -10,7 +10,9 @@ module.exports = (grunt)->
       compile:
         files:
           'server.js': 'src/coffee/node/server.coffee'  # 1:1 compile server file
-          'app/js/app.js': ['src/coffee/angular/*.coffee']  # concat then compile angular js into single file
+          'app/js/app.js': ['src/coffee/angular/*.coffee']  # concat and compile angular js into single file
+          'test/unit/compiledSpec.js': ['src/coffee/test/unit/*.coffee']  # concat and compile angular js into single file
+          'test/e2e/scenarios.js': ['src/coffee/test/e2e/*.coffee']  # compile angular files
 
     concurrent:
         server_watch: ['nodemon', 'watch']
@@ -43,7 +45,7 @@ module.exports = (grunt)->
 
     watch:
       coffee:
-        files: ['src/coffee/angular/*', 'src/coffee/node/*']
+        files: ['src/coffee/**/*.coffee']
         tasks: ['coffee']
         options:
           livereload: false  # watch the compiled files instead
