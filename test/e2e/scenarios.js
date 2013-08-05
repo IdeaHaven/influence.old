@@ -9,8 +9,8 @@ describe('my app', function() {
   });
 
 
-  it('should automatically redirect to /individual when location hash/fragment is empty', function() {
-    expect(browser().location().url()).toBe("/individual");
+  it('should automatically redirect to /overview when location hash/fragment is empty', function() {
+    expect(browser().location().url()).toBe("/overview");
   });
 
 
