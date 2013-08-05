@@ -46,10 +46,18 @@ module.exports = (grunt)->
         files: ['src/coffee/angular/*', 'src/coffee/node/*']
         tasks: ['coffee']
         options:
+          livereload: false  # watch the compiled files instead
+      js:
+        files: ['app/js/*.js']
+        options:
           livereload: true  # default port 35729
-      mycss:
+      stylus:
         files: ['src/stylus/*', 'src/stylus/bootstrap/*']
         tasks: ['stylus']
+        options:
+          livereload: false  # watch the compiled files instead
+      css:
+        files: ['app/css/*.css']
         options:
           livereload: true  # default port 35729
       html:
