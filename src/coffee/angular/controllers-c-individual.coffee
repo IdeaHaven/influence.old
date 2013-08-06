@@ -3,15 +3,16 @@
 angular
   .module('influences.controllers')
   .controller('IndividualCtrl', ['$scope', 'Api_get', ($scope, Api_get)->
+
     # set default variables
     $scope.zip = 94102  # set default zip if one is not chosen
     $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
 
     # Define Methods
     $scope.get_rep_data_by_zip = ()->
-      Api_get.congress "legislators/locate?zip=#{$scope.zip}", $scope.callback_rep_data_by_zip
+      Api_get.congress "legislators/locate?zip=#{$scope.zip}", $scope.callback_rep_data_by_location
 
-    $scope.callback_rep_data_by_zip = (err, data)->
+    $scope.callback_rep_data_by_location = (err, data)->
       $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
       $scope.reps = {}
       for rep in data
@@ -139,7 +140,5 @@ angular
       $scope.$watch 'selected_rep.transparencydata_id', $scope.get_local_breakdown_by_selected_rep_transparencydata_id
       $scope.$watch 'selected_rep.transparencydata_id', $scope.get_type_breakdown_by_selected_rep_transparencydata_id
 
-    # independent watchers
     $scope.$watch 'zip', $scope.get_rep_data_by_zip
-
   ])
