@@ -12,16 +12,13 @@ describe('influences controllers', ()->
   describe('IndividualCtrl', ()->
 
     @scope;
-    @ctrl;
     @service;
-    @$httpBackend;
+    @ctrl;
+    $httpBackend;
 
     beforeEach(inject( (_$httpBackend_, $rootScope, $controller, Api_get)->
-      @$httpBackend = _$httpBackend_;
-      # ignore for now... this is an example of how I might implement this later
-      # $httpBackend.expectGET('data/products.json').
-      #     respond([{name: 'Celeri'}, {name: 'Panais'}]);
-
+      $httpBackend = $injector.get('$httpBackend')
+      $httpBackend.whenGET(/.*/).respond({name: 'woohoo'})
       @scope = $rootScope.$new();
       @service = Api_get;
       @ctrl = $controller('IndividualCtrl', {
@@ -30,8 +27,25 @@ describe('influences controllers', ()->
       });
     ));
 
-    it('should set the correct zip value', ()->
+    afterEach( ()->
+     $httpBackend.verifyNoOutstandingExpectation();
+     $httpBackend.verifyNoOutstandingRequest();
+    );
+
+    it('should access the default zip value', ()->
       expect(@scope.zip).toEqual(94102);
+    );
+
+    it('should pull individual data based on the zip', ()->
+      flag = false
+
+      runs ()=>
+        console.log 'running'
+        @scope.get_rep_data_by_zip
+
+      waitsFor ()->
+        flag
+      , "error", 1000
     );
   );
 );

@@ -1,0 +1,56 @@
+<div class="row-fluid">
+  <div class="span6">
+    <span>Select Rep1</span>
+    <input type="text" ng-model="selected_rep_name" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8">
+  </div>
+  <div class="span6">
+    <span>Select Rep2</span>
+    <input type="text" ng-model="selected_rep_name2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8">
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span12 component">
+
+    <div class="row-fluid">
+      <div class="span6">
+        <h1>{{selected_rep.overview.fullname}}</h1>
+      </div>
+      <div class="span6">
+        <h1>{{selected_rep2.overview.fullname}}</h1>
+      </div>
+    </div>
+
+    <h2>Contributions</h2>
+    <div class="row-fluid">
+      <div class="span6">
+        <d3-bar-chart class="d3" data="selected_rep.funding.contributors" number="total_amount" text="name"></d3-bar-chart>
+      </div>
+      <div class="span6">
+        <d3-bar-chart class="d3" data="selected_rep2.funding.contributors" number="total_amount" text="name"></d3-bar-chart>
+      </div>
+    </div>
+
+    <h2>Indutries</h2>
+    <div class="row-fluid">
+      <div class="span6">
+        <d3-bar-chart class="d3" data="selected_rep.funding.industries" number="amount" text="name"></d3-bar-chart>
+      </div>
+      <div class="span6">
+        <d3-bar-chart class="d3" data="selected_rep2.funding.industries" number="amount" text="name"></d3-bar-chart>
+      </div>
+    </div>
+
+    <h2>Sectors</h2>
+    <div class="row-fluid">
+      <div class="span6">
+        <d3-bar-chart class="d3" data="selected_rep.funding.sectors" number="amount" text="sector"></d3-bar-chart>
+      </div>
+      <div class="span6">
+        <d3-bar-chart class="d3" data="selected_rep2.funding.sectors" number="amount" text="sector"></d3-bar-chart>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+

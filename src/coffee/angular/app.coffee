@@ -5,7 +5,7 @@ angular
   .config(['$routeProvider', ($routeProvider)->
     $routeProvider.when('/overview', {templateUrl: 'partials/overview.html', controller: 'OverviewCtrl'})
     $routeProvider.when('/individual', {templateUrl: 'partials/individual.html', controller: 'IndividualCtrl'})
-    $routeProvider.when('/bill', {templateUrl: 'partials/bill.html', controller: 'BillCtrl'})
+    $routeProvider.when('/compare', {templateUrl: 'partials/compare.html', controller: 'IndividualCtrl'})
     $routeProvider.otherwise({redirectTo: '/overview'})
   ])
   # set default headers to cors for api access
