@@ -17,9 +17,9 @@ angular
         url: "http://congress.api.sunlightfoundation.com/#{path}&apikey=83c0368c509f468e992218f41e6529d7"
         method: "GET"
       .success (data, status, headers, config)->
-        callback data.results
+        callback null, data.results
       .error (data, status, headers, config)->
-        console.log("Error pulling #{path} from Sunlight Congress v3 API!")
+        callback "Error pulling #{path} from Sunlight Congress v3 API"
     influence: (path, callback)->
       apiurl = "http://transparencydata.com/api/1.0/#{path}&apikey=83c0368c509f468e992218f41e6529d7"
       $http
@@ -29,7 +29,7 @@ angular
           q: "select * from json where url=\"#{apiurl}\""
           format: "json"
       .success (data, status, headers, config)->
-        callback data.query.results.json
+        callback null, data.query.results.json
       .error (data, status, headers, config)->
-        console.log("Error pulling votes from NYT API!")
+        callback "Error pulling #{path} from Sunlight influence explorer API"
   ]

@@ -11,7 +11,7 @@ angular
     $scope.get_rep_data_by_zip = ()->
       Api_get.congress "legislators/locate?zip=#{$scope.zip}", $scope.callback_rep_data_by_zip
 
-    $scope.callback_rep_data_by_zip = (data)->
+    $scope.callback_rep_data_by_zip = (err, data)->
       $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
       $scope.reps = {}
       for rep in data
@@ -32,14 +32,14 @@ angular
         if not $scope.selected_rep.committees
           Api_get.congress "committees?member_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_committees_data_by_selected_rep_id
 
-    $scope.callback_committees_data_by_selected_rep_id = (data)->
+    $scope.callback_committees_data_by_selected_rep_id = (err, data)->
       $scope.selected_rep.committees = data
 
     $scope.get_sponsored_bills_data_by_selected_rep_id = ()->
       if not $scope.selected_rep.bills
         Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_sponsored_bills_data_by_selected_rep_id
 
-    $scope.callback_sponsored_bills_data_by_selected_rep_id = (data)->
+    $scope.callback_sponsored_bills_data_by_selected_rep_id = (err, data)->
       $scope.selected_rep.bills = $scope.selected_rep.bills or []
       for bill in data
         if not bill.short_title
@@ -50,7 +50,7 @@ angular
       if not $scope.selected_rep.bills
         Api_get.congress "bills?cosponsor_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_cosponsored_bills_data_by_selected_rep_id
 
-    $scope.callback_cosponsored_bills_data_by_selected_rep_id = (data)->
+    $scope.callback_cosponsored_bills_data_by_selected_rep_id = (err, data)->
       $scope.selected_rep.bills = $scope.selected_rep.bills or []
       for bill in data
         if not bill.short_title
@@ -61,7 +61,7 @@ angular
       if not $scope.selected_rep.bills
         Api_get.congress "bills?withdrawn_cosponsor_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_wdsponsor_bills_data_by_selected_rep_id
 
-    $scope.callback_wdsponsor_bills_data_by_selected_rep_id = (data)->
+    $scope.callback_wdsponsor_bills_data_by_selected_rep_id = (err, data)->
       if data[0]
         $scope.selected_rep.bills = $scope.selected_rep.bills or []
         for bill in data
@@ -72,7 +72,7 @@ angular
     $scope.get_transparencydata_id_by_selected_rep_bioguide_id = ()->
       Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_transparencydata_id_by_rep_bioguide_id
 
-    $scope.callback_transparencydata_id_by_rep_bioguide_id = (data)->
+    $scope.callback_transparencydata_id_by_rep_bioguide_id = (err, data)->
       $scope.selected_rep.transparencydata_id = data.id
 
       run_once = run_once or false
@@ -83,35 +83,35 @@ angular
     $scope.get_contributors_by_selected_rep_transparencydata_id = ()->
       Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors.json?cycle=2012&limit=10", $scope.callback_contributors_by_selected_rep_transparencydata_id
 
-    $scope.callback_contributors_by_selected_rep_transparencydata_id = (data)->
+    $scope.callback_contributors_by_selected_rep_transparencydata_id = (err, data)->
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
       $scope.selected_rep.funding.contributors = data.json
 
     $scope.get_industries_by_selected_rep_transparencydata_id = ()->
       Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/industries.json?cycle=2012&limit=10", $scope.callback_industries_by_selected_rep_transparencydata_id
 
-    $scope.callback_industries_by_selected_rep_transparencydata_id = (data)->
+    $scope.callback_industries_by_selected_rep_transparencydata_id = (err, data)->
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
       $scope.selected_rep.funding.industries = data.json
 
     $scope.get_sectors_by_selected_rep_transparencydata_id = ()->
       Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/sectors.json?cycle=2012&limit=10", $scope.callback_sectors_by_selected_rep_transparencydata_id
 
-    $scope.callback_sectors_by_selected_rep_transparencydata_id = (data)->
+    $scope.callback_sectors_by_selected_rep_transparencydata_id = (err, data)->
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
       $scope.selected_rep.funding.sectors = data.json
 
     $scope.get_local_breakdown_by_selected_rep_transparencydata_id = ()->
       Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/local_breakdown.json?cycle=2012&limit=10", $scope.callback_local_breakdown_by_selected_rep_transparencydata_id
 
-    $scope.callback_local_breakdown_by_selected_rep_transparencydata_id = (data)->
+    $scope.callback_local_breakdown_by_selected_rep_transparencydata_id = (err, data)->
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
       $scope.selected_rep.funding.local_breakdown = data
 
     $scope.get_type_breakdown_by_selected_rep_transparencydata_id = ()->
       Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/type_breakdown.json?cycle=2012&limit=10", $scope.callback_type_breakdown_by_selected_rep_transparencydata_id
 
-    $scope.callback_type_breakdown_by_selected_rep_transparencydata_id = (data)->
+    $scope.callback_type_breakdown_by_selected_rep_transparencydata_id = (err, data)->
       $scope.selected_rep.funding = $scope.selected_rep.funding or {}
       $scope.selected_rep.funding.type_breakdown = data
 
