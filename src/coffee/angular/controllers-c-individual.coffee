@@ -9,19 +9,38 @@ angular
     $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
 
     # Define Methods
+    $scope.get_all_reps_in_office = ()->
+      Api_get.congress "/legislators?per_page=all", $scope.callback_all_reps_in_office
+
+    $scope.callback_all_reps_in_office = (err, data)->
+      $scope.reps = $scope.reps or {}
+      $scope.reps_names_list = [];
+      for rep in data
+        rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
+        $scope.reps_names_list.push({name: rep.fullname, bioguide_id: rep.bioguide_id});
+        rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
+        rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
+        $scope.reps[rep.bioguide_id] = {}
+        $scope.reps[rep.bioguide_id].overview = rep
+
+    $scope.find_selected_rep_by_name = ()->
+      if typeof $scope.selected_rep_name is "object"
+        $scope.selected_rep = $scope.reps[$scope.selected_rep_name.bioguide_id]
+        $scope.selected_rep_name = null
+
     $scope.get_rep_data_by_zip = ()->
       Api_get.congress "legislators/locate?zip=#{$scope.zip}", $scope.callback_rep_data_by_location
 
     $scope.callback_rep_data_by_location = (err, data)->
       $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
-      $scope.reps = {}
+      $scope.reps_zip = {}
       for rep in data
         rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
         rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
         rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
-        $scope.reps[rep.bioguide_id] = {}
-        $scope.reps[rep.bioguide_id].overview = rep
-      $scope.selected_rep = $scope.reps[data[0].bioguide_id]  # sets default selection for reps buttons
+        $scope.reps_zip[rep.bioguide_id] = {}
+        $scope.reps_zip[rep.bioguide_id].overview = rep
+      $scope.selected_rep = $scope.reps_zip[data[0].bioguide_id]  # sets default selection for reps buttons
 
       run_once = run_once or false
       if not run_once
@@ -141,4 +160,6 @@ angular
       $scope.$watch 'selected_rep.transparencydata_id', $scope.get_type_breakdown_by_selected_rep_transparencydata_id
 
     $scope.$watch 'zip', $scope.get_rep_data_by_zip
+    $scope.$watch 'selected_rep_name', $scope.find_selected_rep_by_name
+    $scope.get_all_reps_in_office()
   ])
