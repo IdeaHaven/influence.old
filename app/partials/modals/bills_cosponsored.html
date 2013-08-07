@@ -1,0 +1,28 @@
+<div modal="modal_should_be_open.bills_cosponsored" close="modal_close('bills_cosponsored')" options="modal_options">
+    <div class="modal-header">
+      <h3>Co-Sponsored Bills</h3>
+    </div>
+    <div class="modal-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Official Title</th>
+            <th>Co-Sponsors</th>
+            <th>Enacted</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="bill in selected_rep.bills.cosponsored">
+            <td>{{bill.official_title}}</td>
+            <td>{{bill.cosponsors_count}}</td>
+            <td>{{bill.history.enacted}}</td>
+            <td><a href={{bill.urls.congress}} target="_blank">Full Text</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning cancel" ng-click="modal_close('bills_cosponsored')">Close</button>
+    </div>
+</div>

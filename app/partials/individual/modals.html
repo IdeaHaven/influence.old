@@ -1,0 +1,21 @@
+<div class="component">
+  <div class="row-fluid">
+    <div class="span12">
+      <h4>Currently {{selected_rep.overview.last_name}} </h4>
+      <ng-switch on="selected_rep.overview.leader">
+        <div ng-switch-when="false">
+          <button class="btn" ng-click="modal_open('committees')">Serves on {{selected_rep.committees.length}} Committees</button>
+          <sub-view template="modals/committees"></sub-view>
+        </div>
+        <div ng-switch-when="true">
+          <p>serves as the {{selected_rep.overview.leadership_role}} and therefore does not serve on any committees.</p>
+        </div>
+      </ng-switch>
+      <button class="btn" ng-click="modal_open('bills_sponsored')">Sponsored {{selected_rep.bills.sponsored.length}} Bills</button>
+      <sub-view template="modals/bills_sponsored"></sub-view>
+      <button class="btn" ng-click="modal_open('bills_cosponsored')">Co-Sponsored {{selected_rep.bills.cosponsored.length}} Bills</button>
+      <sub-view template="modals/bills_cosponsored"></sub-view>
+      <br /><spanp>For more information click on the buttons above.</p>
+    </div>
+  </div>
+</div>

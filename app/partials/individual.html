@@ -1,37 +1,114 @@
-<div>
+<sub-view template="header/individual"></sub-view>
 
-  <div class="row-fluid">
-    <div class="span12">
-      <span>Zip Code: </span>
-      <input class="zip" name="zip" ng-model="zip" type="zip" value={{zip}} required>
+<div class="row-fluid">
+  <div class="container span12">
 
-      <div class="reps-list btn-group">
-        <button type="button" class="btn btn-primary" ng-model="$parent.selected_rep" btn-radio='rep' ng-repeat="rep in reps_zip">{{rep.overview.fullname}}</button>
+    <div class="row-fluid">
+      <div class="span9">
+        <ng-switch on="loaded.bio">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <sub-view template="individual/overview"></sub-view>
+          </div>
+        </ng-switch>
       </div>
-      <span>Search All Reps: </span>
-      <input type="text" ng-model="selected_rep_name" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8">
+      <div class="span3">
+        <ng-switch on="loaded.modals">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <sub-view template="individual/modals"></sub-view>
+          </div>
+        </ng-switch>
+      </div>
     </div>
-  </div>
 
-
-  <!-- a scope variable can't be passed into the sub_view attribute directive so switch must be used -->
-  <div class="row-fluid">
-    <div class="container span12">
-      <ng-switch on="sub_view_rep_type">
-        <div ng-switch-when="loading">
-          <sub-view template="loading"></sub-view>
-        </div>
-        <div ng-switch-when="house">
-          <sub-view template="individual/house"></sub-view>
-        </div>
-        <div ng-switch-when="house-leader">
-          <sub-view template="individual/house-leader"></sub-view>
-        </div>
-        <div ng-switch-when="senate">
-          <sub-view template="individual/senate"></sub-view>
-        </div>
-      </ng-switch>
+    <div class="row-fluid">
+      <div class="span4">
+        <ng-switch on="loaded.sectors">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <div class="component">
+              <h1> Top Sectors </h1>
+              <d3-bar-chart class="d3" data="selected_rep.funding.sectors" number="amount" text="name"></d3-bar-chart>
+            </div>
+          </div>
+        </ng-switch>
+      </div>
+      <div class="span4">
+        <ng-switch on="loaded.contributors">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <div class="component">
+              <h1> Top Contributors </h1>
+              <d3-bar-chart class="d3" data="selected_rep.funding.contributors" number="total_amount" text="name"></d3-bar-chart>
+            </div>
+          </div>
+        </ng-switch>
+      </div>
+      <div class="span4">
+        <ng-switch on="loaded.industries">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <div class="component">
+              <h1> Top Industries </h1>
+              <d3-bar-chart class="d3" data="selected_rep.funding.industries" number="amount" text="name"></d3-bar-chart>
+            </div>
+          </div>
+        </ng-switch>
+      </div>
     </div>
-  </div>
 
+    <div class="row-fluid">
+      <div class="span3">
+        <ng-switch on="loaded.locale">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <div class="component">
+              <h1>Locality</h1>
+              <d3-pie-chart-individual class="d3" data="selected_rep.funding.locale" property0="In-State" property1="Out-of-State"></d3-pie-chart>
+            </div>
+          </div>
+        </ng-switch>
+      </div>
+      <div class="span3">
+        <ng-switch on="loaded.type">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <div class="component">
+              <h1>Type</h1>
+              <d3-pie-chart-individual class="d3" data="selected_rep.funding.type" property0="Individuals" property1="PACs"></d3-pie-chart>
+            </div>
+          </div>
+        </ng-switch>
+      </div>
+      <div class="span6">
+        <ng-switch on="loaded.words">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <div class="component">
+              <d3-word-cloud class="d3" data="selected_rep.words" count="count" word="ngram"></d3-word-cloud>
+            </div>
+          </div>
+        </ng-switch>
+      </div>
+    </div>
+
+  </div>
 </div>
+

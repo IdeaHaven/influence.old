@@ -1,7 +1,25 @@
+<sub-view template="header/overview"></sub-view>
+
 <div class="row-fluid">
   <div class="span6">
-    <sub-view template="overview/top-industries"></sub-view>
+    <h3>View by Representative</h3>
+    <d3-map class="d3"></d3-map><br />
+    <input type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Find by Name"><br />
+    <a class="button-to-individual" href="#/individual"><button class="btn">View Selected Rep</button></a><br />
+    <sub-view template="search/zip"></sub-view>
   </div>
   <div class="span6">
+    <h3>View by Influence</h3>
+    <h4>Top Industries by Contribution</h4>
+    <ng-switch on="loaded.industry_top">
+      <div ng-switch-when="false">
+        <sub-view template="loading"></sub-view>
+      </div>
+      <div ng-switch-when="true">
+        <d3-pie-chart-overview class="d3 span10 push1" data="industry.top" number="amount" text="name"></d3-bar-chart>
+      </div>
+    </ng-switch>
+    <input type="text" ng-model="selected.sector" placeholder="Sector - Not Working Yet"><br />
+    <input type="text" ng-model="selected.company" placeholder="Company - Not Working Yet">
   </div>
 </div>

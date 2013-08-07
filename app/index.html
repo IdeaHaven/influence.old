@@ -9,27 +9,18 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body ng-cloak class='container-fluid'>
-
-  <ul class="nav nav-tabs" ng-controller="NavCtrl">
-    <li ng-class="navClass('overview')"><a href="#/overview">Overview</a></li>
-    <li ng-class="navClass('individual')"><a href="#/individual">Individual</a></li>
-    <li ng-class="navClass('compare')"><a href="#/compare">Compare</a></li>
-  </ul>
+<div ng-controller="AppCtrl"></div> <!-- sets up $rootScope before anything else is called -->
 
   <div ng-view></div>
+  <sub-view template="footer"></sub-view>
 
-  <div ng-controller="AppCtrl" class="footer">
-    Data Source: <a href={{source.url}} target="_blank">{{source.name}}</a> | Data Licence: <a href={{license.url}} target="_blank">{{license.name}}</a> | App version: {{version.production}}
-  </div>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-  -->
   <script src="lib/angular.js"></script>
   <script src="js/app.js"></script>
 
   <script src="lib/lodash.js"></script>
   <script src="lib/bootstrap.js"></script>
   <script src="lib/d3.js"></script>
+  <script src="lib/d3.layout.cloud.js"></script>
 </body>
 </html>

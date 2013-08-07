@@ -1,0 +1,26 @@
+<div modal="modal_should_be_open.committees" close="modal_close('committees')" options="modal_options">
+  <div class="modal-header">
+    <h3>Committees</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Sub-Committee</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="committee in selected_rep.committees">
+          <td>{{committee.name}}</td>
+          <td>{{committee.subcommittee}}</td>
+          <td><a href="http://www.govtrack.us/congress/committees/{{committee.committee_id}}" target="_blank">Link</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-warning cancel" ng-click="modal_close('committees')">Close</button>
+  </div>
+</div>

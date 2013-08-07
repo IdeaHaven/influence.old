@@ -2,248 +2,236 @@
 
 angular
   .module('influences.controllers')
-  .controller('IndividualCtrl', ['$scope', 'Api_get', ($scope, Api_get)->
+  .controller('IndividualCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', ($rootScope, $scope, Api_get, $timeout)->
+
+    $scope.check_if_rep_data_loaded = ()->
+      if _.isEmpty($scope.reps)
+        $timeout($scope.check_if_rep_data_loaded, 500)
+      else
+        $scope.set_watchers_for_bioguide_id()
+        $scope.selected_rep = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
+
+    # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
+    $scope.check_if_rep_data_loaded()
+    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
+    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
+
+    $scope.get = {}
+    $scope.callback = {}
+
 
     # set default variables
-    $scope.zip = 94102  # set default zip if one is not chosen
-    $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
+    $scope.loaded =
+      bio: false
+      committees: false
+      bills_sponsored: false
+      bills_cosponsored: false
+      modals: false
+      modals_check: ()->
+        if $scope.loaded.committees and $scope.loaded.bills_sponsored and $scope.loaded.bills_cosponsored
+          $scope.loaded.modals = true
+      contributors: false
+      industries: false
+      sectors: false
+      locale: false
+      type: false
+      words: false
+      reset: ()->
+        $scope.loaded.bio = false
+        $scope.loaded.committees = false
+        $scope.loaded.bills_sponsored = false
+        $scope.loaded.bills_cosponsored = false
+        $scope.loaded.modals = false
+        $scope.loaded.contributors = false
+        $scope.loaded.industries = false
+        $scope.loaded.sectors = false
+        $scope.loaded.locale = false
+        $scope.loaded.type = false
+        $scope.loaded.words = false
+    $scope.$watch 'loaded.bills_committees', $scope.loaded.modals_check
+    $scope.$watch 'loaded.bills_sponsored', $scope.loaded.modals_check
+    $scope.$watch 'loaded.bills_cosponsored', $scope.loaded.modals_check
 
-    # Define Methods
-    $scope.get_all_reps_in_office = ()->
-      Api_get.congress "/legislators?per_page=all", $scope.callback_all_reps_in_office
+#####################
+#Define API Methods
+#####################
 
-    $scope.callback_all_reps_in_office = (err, data)->
-      $scope.reps = $scope.reps or {}
-      $scope.reps_names_list = [];
-      for rep in data
-        rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
-        $scope.reps_names_list.push({name: rep.fullname, bioguide_id: rep.bioguide_id});
-        rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
-        rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
-        $scope.reps[rep.bioguide_id] = {}
-        $scope.reps[rep.bioguide_id].overview = rep
+    $scope.get.transparencydata_id = ()->
+      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}&", $scope.callback.transparencydata_id, this
 
-    $scope.find_selected_rep_by_name = ()->
-      if typeof $scope.selected_rep_name is "object"
-        $scope.selected_rep = $scope.reps[$scope.selected_rep_name.bioguide_id]
-        $scope.selected_rep_name = null
+    $scope.callback.transparencydata_id = (error, data)->
+      if not error
+        $scope.selected_rep.transparencydata_id = data.id
 
-    $scope.find_selected_rep_by_name2 = ()->
-      if typeof $scope.selected_rep_name2 is "object"
-        $scope.selected_rep2 = $scope.reps[$scope.selected_rep_name2.bioguide_id]
-        $scope.selected_rep_name2 = null
+        run_once = run_once or false
+        if not run_once
+          $scope.set_watchers_for_transparencydata_id() # only set the watchers once
+          run_once = true
+      else console.log "Error: ", error
 
-    $scope.get_rep_data_by_zip = ()->
-      Api_get.congress "legislators/locate?zip=#{$scope.zip}", $scope.callback_rep_data_by_location
+    $scope.get.bio = ()->
+      Api_get.influence "entities/#{$scope.selected_rep.transparencydata_id}.json?", $scope.callback.bio, this
 
-    $scope.callback_rep_data_by_location = (err, data)->
-      $scope.sub_view_rep_type = 'loading' # set loading view until rep data is loaded
-      $scope.reps_zip = {}
-      for rep in data
-        rep.fullname = "#{rep.title}. #{rep.first_name} #{rep.last_name}"
-        rep.chamber = rep.chamber.charAt(0).toUpperCase() + rep.chamber.slice(1)  # cap first letter
-        rep.party_name = if rep.party is "D" then "Democrat" else if rep.party is "R" then "Republican" else rep.party
-        $scope.reps_zip[rep.bioguide_id] = {}
-        $scope.reps_zip[rep.bioguide_id].overview = rep
-      $scope.selected_rep = $scope.reps_zip[data[0].bioguide_id]  # sets default selection for reps buttons
-      $scope.selected_rep2 = $scope.reps_zip[data[1].bioguide_id]  # sets default selection for reps buttons
+    $scope.callback.bio = (error, data)->
+      if not error
+        $scope.selected_rep.bio = data
+        console.log data
+        $scope.loaded.bio = true
+      else console.log "Error: ", error
 
-      run_once = run_once or false
-      if not run_once
-        $scope.set_watchers_for_bioguide_id_dependent_data() # only set the watchers once
-        run_once = true
+    $scope.get.committees = ()->
+      if not $scope.selected_rep.overview.leadership_role  # no committees if a leader
+        $scope.selected_rep.overview.leader = false
+        if not $scope.selected_rep.committees  # if committees were already pulled, don't pull again
+          Api_get.congress "committees?member_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback.committees
+      else
+        $scope.selected_rep.overview.leader = true
+        $scope.loaded.committees = true
 
-    $scope.get_committees_data_by_selected_rep_id = ()->
-      if not $scope.selected_rep.overview.leadership_role
-        if not $scope.selected_rep.committees
-          Api_get.congress "committees?member_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_committees_data_by_selected_rep_id
-      if not $scope.selected_rep2.overview.leadership_role
-        if not $scope.selected_rep2.committees
-          Api_get.congress "committees?member_ids=#{$scope.selected_rep2.overview.bioguide_id}", $scope.callback_committees_data_by_selected_rep_id2
+    $scope.callback.committees = (error, data)->
+      if not error
+        $scope.selected_rep.committees = data
+        $scope.loaded.committees = true
+      else console.log "Error: ", error
 
-
-    $scope.callback_committees_data_by_selected_rep_id = (err, data)->
-      $scope.selected_rep.committees = data
-
-    $scope.callback_committees_data_by_selected_rep_id2 = (err, data)->
-      $scope.selected_rep2.committees = data
-
-    $scope.get_sponsored_bills_data_by_selected_rep_id = ()->
+    $scope.get.bills_sponsored = ()->
       if not $scope.selected_rep.bills
-        Api_get.congress "bills?sponsor_id=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_sponsored_bills_data_by_selected_rep_id
-      if not $scope.selected_rep2.bills
-        Api_get.congress "bills?sponsor_id=#{$scope.selected_rep2.overview.bioguide_id}", $scope.callback_sponsored_bills_data_by_selected_rep_id2
+        Api_get.congress "bills?history.active=true&sponsor_id=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback.bills_sponsored, this
 
-    $scope.callback_sponsored_bills_data_by_selected_rep_id = (err, data)->
-      $scope.selected_rep.bills = $scope.selected_rep.bills or []
-      for bill in data
-        if not bill.short_title
-          bill.short_title = bill.official_title
-      $scope.selected_rep.bills.sponsored = data
-
-    $scope.callback_sponsored_bills_data_by_selected_rep_id2 = (err, data)->
-      $scope.selected_rep2.bills = $scope.selected_rep2.bills or []
-      for bill in data
-        if not bill.short_title
-          bill.short_title = bill.official_title
-      $scope.selected_rep2.bills.sponsored = data
-
-    $scope.get_cosponsored_bills_data_by_selected_rep_id = ()->
-      if not $scope.selected_rep.bills
-        Api_get.congress "bills?cosponsor_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_cosponsored_bills_data_by_selected_rep_id
-      if not $scope.selected_rep2.bills
-        Api_get.congress "bills?cosponsor_ids=#{$scope.selected_rep2.overview.bioguide_id}", $scope.callback_cosponsored_bills_data_by_selected_rep_id2
-
-    $scope.callback_cosponsored_bills_data_by_selected_rep_id = (err, data)->
-      $scope.selected_rep.bills = $scope.selected_rep.bills or []
-      for bill in data
-        if not bill.short_title
-          bill.short_title = bill.official_title
-      $scope.selected_rep.bills.cosponsored = data
-
-    $scope.callback_cosponsored_bills_data_by_selected_rep_id2 = (err, data)->
-      $scope.selected_rep2.bills = $scope.selected_rep2.bills or []
-      for bill in data
-        if not bill.short_title
-          bill.short_title = bill.official_title
-      $scope.selected_rep2.bills.cosponsored = data
-
-    $scope.get_wdsponsor_bills_data_by_selected_rep_id = ()->
-      if not $scope.selected_rep.bills
-        Api_get.congress "bills?withdrawn_cosponsor_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_wdsponsor_bills_data_by_selected_rep_id
-      if not $scope.selected_rep.bills
-        Api_get.congress "bills?withdrawn_cosponsor_ids=#{$scope.selected_rep2.overview.bioguide_id}", $scope.callback_wdsponsor_bills_data_by_selected_rep_id2
-
-    $scope.callback_wdsponsor_bills_data_by_selected_rep_id = (err, data)->
-      if data[0]
+    $scope.callback.bills_sponsored = (error, data)->
+      if not error
         $scope.selected_rep.bills = $scope.selected_rep.bills or []
         for bill in data
           if not bill.short_title
             bill.short_title = bill.official_title
-        $scope.selected_rep.bills.wdsponsor = data
+        $scope.selected_rep.bills.sponsored = data
+        $scope.loaded.bills_sponsored = true
+      else console.log "Error: ", error
 
-    $scope.callback_wdsponsor_bills_data_by_selected_rep_id2 = (err, data)->
-      if data[0]
-        $scope.selected_rep2.bills = $scope.selected_rep2.bills or []
+    $scope.get.bills_cosponsored = ()->
+      if not $scope.selected_rep.bills
+        Api_get.congress "bills?history.active=true&cosponsor_ids=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback.bills_cosponsored, this
+
+    $scope.callback.bills_cosponsored = (error, data)->
+      if not error
+        $scope.selected_rep.bills = $scope.selected_rep.bills or []
         for bill in data
           if not bill.short_title
             bill.short_title = bill.official_title
-        $scope.selected_rep2.bills.wdsponsor = data
+        $scope.selected_rep.bills.cosponsored = data
+        $scope.loaded.bills_cosponsored = true
+      else console.log "Error: ", error
 
-    $scope.get_transparencydata_id_by_selected_rep_bioguide_id = ()->
-      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}", $scope.callback_transparencydata_id_by_rep_bioguide_id
-      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep2.overview.bioguide_id}", $scope.callback_transparencydata_id_by_rep_bioguide_id2
+    $scope.get.contributors = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors.json?cycle=2012&limit=10&", $scope.callback.contributors, this
 
-    $scope.callback_transparencydata_id_by_rep_bioguide_id = (err, data)->
-      $scope.selected_rep.transparencydata_id = data.id
+    $scope.callback.contributors = (error, data)->
+      if not error
+        $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+        $scope.selected_rep.funding.contributors = data.json
+        $scope.loaded.contributors = true
+      else console.log "Error: ", error
 
-      run_once = run_once or false
-      if not run_once
-        $scope.set_watchers_for_transparencydata_id_dependent_data() # only set the watchers once
-        run_once = true
+    $scope.get.industries = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/industries.json?cycle=2012&limit=10&", $scope.callback.industries, this
 
-    $scope.callback_transparencydata_id_by_rep_bioguide_id2 = (err, data)->
-      $scope.selected_rep2.transparencydata_id = data.id
+    $scope.callback.industries = (error, data)->
+      if not error
+        $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+        $scope.selected_rep.funding.industries = data.json
+        $scope.loaded.industries = true
+      else console.log "Error: ", error
 
-    $scope.get_contributors_by_selected_rep_transparencydata_id = ()->
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors.json?cycle=2012&limit=10", $scope.callback_contributors_by_selected_rep_transparencydata_id
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors.json?cycle=2012&limit=10", $scope.callback_contributors_by_selected_rep_transparencydata_id2
+    $scope.get.sectors = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/sectors.json?cycle=2012&limit=10&", $scope.callback.sectors, this
 
-    $scope.callback_contributors_by_selected_rep_transparencydata_id = (err, data)->
-      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
-      $scope.selected_rep.funding.contributors = data.json
+    $scope.callback.sectors = (error, data)->
+      names =
+        F: "Finance/Insurance/Real Estate"
+        W: "Other"
+        N: "Misc Business"
+        Q: "Ideology/Single-Issue"
+        H: "Health"
+        K: "Lawyers & Lobbyists"
+        B: "Communications/Electronics"
+        P: "Labor"
+        E: "Energy/Natural Resources"
+        C: "Construction"
+        A: "Agribusiness"
+        M: "Transportation"
+        D: "Defense"
 
-    $scope.callback_contributors_by_selected_rep_transparencydata_id2 = (err, data)->
-      $scope.selected_rep2.funding = $scope.selected_rep2.funding or {}
-      $scope.selected_rep2.funding.contributors = data.json
+      if not error
+        $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+        for sector in data.json
+          sector.name = names[sector.sector]
+        $scope.selected_rep.funding.sectors = data.json
+        $scope.loaded.sectors = true
+      else console.log "Error: ", error
 
-    $scope.get_industries_by_selected_rep_transparencydata_id = ()->
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/industries.json?cycle=2012&limit=10", $scope.callback_industries_by_selected_rep_transparencydata_id
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors/industries.json?cycle=2012&limit=10", $scope.callback_industries_by_selected_rep_transparencydata_id2
+    $scope.get.locale = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/local_breakdown.json?cycle=2012&limit=10&", $scope.callback.locale, this
 
-    $scope.callback_industries_by_selected_rep_transparencydata_id = (err, data)->
-      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
-      $scope.selected_rep.funding.industries = data.json
+    $scope.callback.locale = (error, data)->
+      if not error
+        $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+        $scope.selected_rep.funding.locale = data
+        $scope.loaded.locale = true
+      else console.log "Error: ", error
 
-    $scope.callback_industries_by_selected_rep_transparencydata_id2 = (err, data)->
-      $scope.selected_rep2.funding = $scope.selected_rep2.funding or {}
-      $scope.selected_rep2.funding.industries = data.json
+    $scope.get.type = ()->
+      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/type_breakdown.json?cycle=2012&limit=10&", $scope.callback.type, this
 
-    $scope.get_sectors_by_selected_rep_transparencydata_id = ()->
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/sectors.json?cycle=2012&limit=10", $scope.callback_sectors_by_selected_rep_transparencydata_id
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors/sectors.json?cycle=2012&limit=10", $scope.callback_sectors_by_selected_rep_transparencydata_id2
+    $scope.callback.type = (error, data)->
+      if not error
+        $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+        $scope.selected_rep.funding.type = data
+        $scope.loaded.type = true
+      else console.log "Error: ", error
 
-    $scope.callback_sectors_by_selected_rep_transparencydata_id = (err, data)->
-      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
-      $scope.selected_rep.funding.sectors = data.json
+    $scope.get.words = ()->
+      Api_get.words "phrases.json?entity_type=legislator&entity_value=B000589&page=0&sort=count%20desc", $scope.callback.words, this
 
-    $scope.callback_sectors_by_selected_rep_transparencydata_id2 = (err, data)->
-      $scope.selected_rep2.funding = $scope.selected_rep2.funding or {}
-      $scope.selected_rep2.funding.sectors = data.json
+    $scope.callback.words = (error, data)->
+      if not error
+        $scope.selected_rep.words = data.json
+        $scope.loaded.words = true
+      else console.log "Error: ", error
 
-    $scope.get_local_breakdown_by_selected_rep_transparencydata_id = ()->
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/local_breakdown.json?cycle=2012&limit=10", $scope.callback_local_breakdown_by_selected_rep_transparencydata_id
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors/local_breakdown.json?cycle=2012&limit=10", $scope.callback_local_breakdown_by_selected_rep_transparencydata_id2
+#####################
+# Define Watchers
+#####################
 
-    $scope.callback_local_breakdown_by_selected_rep_transparencydata_id = (err, data)->
-      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
-      $scope.selected_rep.funding.local_breakdown = data
+    $scope.set_watchers_for_bioguide_id = ()->
+      $scope.$watch 'selected_rep', $scope.loaded.reset
+      $scope.$watch 'selected_rep', $scope.get.transparencydata_id
+      $scope.$watch 'selected_rep', $scope.get.committees
+      $scope.$watch 'selected_rep', $scope.get.bills_sponsored
+      $scope.$watch 'selected_rep', $scope.get.bills_cosponsored
+      $scope.$watch 'selected_rep', $scope.get.words
 
-    $scope.callback_local_breakdown_by_selected_rep_transparencydata_id2 = (err, data)->
-      $scope.selected_rep2.funding = $scope.selected_rep2.funding or {}
-      $scope.selected_rep2.funding.local_breakdown = data
+    $scope.set_watchers_for_transparencydata_id = ()->
+      $scope.$watch 'selected_rep.transparencydata_id', $scope.get.bio
+      $scope.$watch 'selected_rep.transparencydata_id', $scope.get.contributors
+      $scope.$watch 'selected_rep.transparencydata_id', $scope.get.industries
+      $scope.$watch 'selected_rep.transparencydata_id', $scope.get.sectors
+      $scope.$watch 'selected_rep.transparencydata_id', $scope.get.locale
+      $scope.$watch 'selected_rep.transparencydata_id', $scope.get.type
 
-    $scope.get_type_breakdown_by_selected_rep_transparencydata_id = ()->
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep.transparencydata_id}/contributors/type_breakdown.json?cycle=2012&limit=10", $scope.callback_type_breakdown_by_selected_rep_transparencydata_id
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors/type_breakdown.json?cycle=2012&limit=10", $scope.callback_type_breakdown_by_selected_rep_transparencydata_id2
+#####################
+# Define Modals and Options
+#####################
 
-    $scope.callback_type_breakdown_by_selected_rep_transparencydata_id = (err, data)->
-      $scope.selected_rep.funding = $scope.selected_rep.funding or {}
-      $scope.selected_rep.funding.type_breakdown = data
+    $scope.modal_should_be_open = {}
 
-    $scope.callback_type_breakdown_by_selected_rep_transparencydata_id2 = (err, data)->
-      $scope.selected_rep2.funding = $scope.selected_rep2.funding or {}
-      $scope.selected_rep2.funding.type_breakdown = data
+    $scope.modal_open = (modal)->
+      $scope.modal_should_be_open[modal] = true
 
-    $scope.set_view_by_selected_rep_role = ()->
-      if $scope.selected_rep.overview.chamber is 'House' and not $scope.selected_rep.overview.leadership_role
-        $scope.sub_view_rep_type = 'house'
-      else if $scope.selected_rep.overview.chamber is 'House' and $scope.selected_rep.overview.leadership_role
-        $scope.sub_view_rep_type = 'house-leader'
-      else if $scope.selected_rep.overview.chamber is 'Senate'
-        $scope.sub_view_rep_type = 'senate'
+    $scope.modal_close = (modal)->
+      $scope.modal_should_be_open[modal] = false
 
-    $scope.set_watchers_for_bioguide_id_dependent_data = ()->
-      $scope.$watch 'selected_rep', $scope.set_view_by_selected_rep_role
-      $scope.$watch 'selected_rep', $scope.get_committees_data_by_selected_rep_id
-      # $scope.$watch 'selected_rep', $scope.get_votes_data_by_selected_rep_id
-      $scope.$watch 'selected_rep', $scope.get_sponsored_bills_data_by_selected_rep_id
-      $scope.$watch 'selected_rep', $scope.get_cosponsored_bills_data_by_selected_rep_id
-      $scope.$watch 'selected_rep', $scope.get_wdsponsor_bills_data_by_selected_rep_id
-      $scope.$watch 'selected_rep', $scope.get_transparencydata_id_by_selected_rep_bioguide_id
-      $scope.$watch 'selected_rep2', $scope.set_view_by_selected_rep_role
-      $scope.$watch 'selected_rep2', $scope.get_committees_data_by_selected_rep_id
-      # $scope.$watch 'selected_rep2', $scope.get_votes_data_by_selected_rep_id
-      $scope.$watch 'selected_rep2', $scope.get_sponsored_bills_data_by_selected_rep_id
-      $scope.$watch 'selected_rep2', $scope.get_cosponsored_bills_data_by_selected_rep_id
-      $scope.$watch 'selected_rep2', $scope.get_wdsponsor_bills_data_by_selected_rep_id
-      $scope.$watch 'selected_rep2', $scope.get_transparencydata_id_by_selected_rep_bioguide_id
+    $scope.modal_options =
+      backdropFade: true
+      dialogFade:true
 
-    $scope.set_watchers_for_transparencydata_id_dependent_data = ()->
-      $scope.$watch 'selected_rep.transparencydata_id', $scope.get_contributors_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep.transparencydata_id', $scope.get_industries_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep.transparencydata_id', $scope.get_sectors_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep.transparencydata_id', $scope.get_local_breakdown_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep.transparencydata_id', $scope.get_type_breakdown_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep2.transparencydata_id', $scope.get_contributors_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep2.transparencydata_id', $scope.get_industries_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep2.transparencydata_id', $scope.get_sectors_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep2.transparencydata_id', $scope.get_local_breakdown_by_selected_rep_transparencydata_id
-      $scope.$watch 'selected_rep2.transparencydata_id', $scope.get_type_breakdown_by_selected_rep_transparencydata_id
-
-
-    $scope.$watch 'zip', $scope.get_rep_data_by_zip
-    $scope.$watch 'selected_rep_name', $scope.find_selected_rep_by_name
-    $scope.$watch 'selected_rep_name2', $scope.find_selected_rep_by_name2
-    $scope.get_all_reps_in_office()
   ])
