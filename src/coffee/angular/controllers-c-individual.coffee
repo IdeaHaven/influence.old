@@ -162,7 +162,8 @@ angular
       $scope.$watch 'selected_rep', $scope.get.committees
       $scope.$watch 'selected_rep', $scope.get.bills_sponsored
       $scope.$watch 'selected_rep', $scope.get.bills_cosponsored
-      $scope.$watch 'selected_rep', $scope.get.words
+      # $scope.$watch 'selected_rep', $scope.get.words
+      # this needs to be fixed on the d3 side before it should be pulled
 
     $scope.set_watchers_for_transparencydata_id = ()->
       $scope.$watch 'selected_rep.transparencydata_id', $scope.get.bio

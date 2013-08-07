@@ -7,7 +7,7 @@
       </div>
       <div ng-switch-when="true">
         <div class="component">
-          <h1>Bills Co-Sponsored by Eachother</h1>
+          <h1>Common Bills</h1>
           <p ng-repeat="bill in comparison.bills">{{bill.official_title}}</p>
         </div>
       </div>
@@ -21,7 +21,22 @@
       <div ng-switch-when="true">
         <div class="component">
           <h1>Common Contributors</h1>
-          <!-- <p ng-repeat="bill in comparison.bills">{{bill.official_title}}</p> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>To {{selected_rep1.overview.last_name}}</th>
+                <th>To {{selected_rep2.overview.last_name}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="contributor in comparison.contributors">
+                <td>{{contributor.name}}</td>
+                <td>{{contributor.rep1.total}}</td>
+                <td>{{contributor.rep2.total}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </ng-switch>

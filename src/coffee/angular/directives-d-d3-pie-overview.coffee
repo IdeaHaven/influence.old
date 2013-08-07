@@ -3,7 +3,7 @@
 ###########################
 angular
   .module('influences.directives')
-  .directive('d3PieChartOverview', [()->
+  .directive('d3PieChartOverview', [($rootScope)->
 
     restrict: 'E'
     scope:
@@ -60,6 +60,7 @@ angular
                 .style("top", (d3.event.pageY) + "px")
                 .html("Sector: #{d.data.name}<br />Amount: <strong>$#{Math.round(d.data.amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong><br />Number of Contributions: #{d.data.count}")
               )
+              .on("click", ((d, i)-> scope.$apply(scope.$parent.selected.industry = scope.$parent.industry.top[i])) )
               .on("mouseout", (()-> div.transition().style("opacity", 1e-6)) )
 
           g.append("path")

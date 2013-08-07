@@ -2,7 +2,7 @@
 
 angular
   .module('influences.services', [])
-  .value('version', production: '0.1')
+  .value('version', production: '0.5.0')
   .value('attribution',
     source:
       url: "http://sunlightfoundation.com/"
