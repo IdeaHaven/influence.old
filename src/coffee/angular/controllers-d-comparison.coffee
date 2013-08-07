@@ -4,39 +4,12 @@ angular
   .module('influences.controllers')
   .controller('ComparisonCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', ($rootScope, $scope, Api_get, $timeout)->
 
-    $scope.check_if_rep_data_loaded = ()->
-      if _.isEmpty($scope.reps)
-        $timeout($scope.check_if_rep_data_loaded, 500)
-      else
-        $scope.set_watchers_for_bioguide_id()
-        $scope.selected_rep1 = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
-        $scope.selected_rep2 = $scope.reps[$scope.selected.rep2.bioguide_id] # set rep1 to object from global scope
-
-    # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
-    $scope.check_if_rep_data_loaded()
-    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
-    $scope.selected.rep2 = $scope.selected.rep2 or {name: "Rep. Nanci Pelosi", bioguide_id: "P000197"}
-    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
-    $scope.$watch 'selected.rep2', $scope.check_if_rep_data_loaded
-
-    $scope.get = {}
-    $scope.callback = {}
-
-    # set default variables
-    $scope.loaded =
-      bills: false
-      selected_rep1:
-        contributors: false
-      selected_rep2:
-        contributors: false
-      contributors: false
-      contributors_check: ()->
-        if $scope.loaded.selected_rep1.contributors and $scope.loaded.selected_rep2.contributors
-          $scope.loaded.contributors = true
-
 #####################
 #Define API Methods
 #####################
+
+    $scope.get = {}
+    $scope.callback = {}
 
     $scope.get.transparencydata_id = ()->
       Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep1.overview.bioguide_id}&", $scope.callback.transparencydata_id, this, "selected_rep1"
@@ -96,5 +69,39 @@ angular
       # $scope.$watch 'selected_rep.transparencydata_id', $scope.get.sectors
       # $scope.$watch 'selected_rep.transparencydata_id', $scope.get.locale
       # $scope.$watch 'selected_rep.transparencydata_id', $scope.get.type
+
+#####################
+# Loading Checks
+#####################
+
+    $scope.loaded =
+      bills: false
+      selected_rep1:
+        contributors: false
+      selected_rep2:
+        contributors: false
+      contributors: false
+      contributors_check: ()->
+        if $scope.loaded.selected_rep1.contributors and $scope.loaded.selected_rep2.contributors
+          $scope.loaded.contributors = true
+
+#####################
+# Initialize
+#####################
+
+    $scope.check_if_rep_data_loaded = ()->
+      if _.isEmpty($scope.reps)
+        $timeout($scope.check_if_rep_data_loaded, 500)
+      else
+        $scope.set_watchers_for_bioguide_id()
+        $scope.selected_rep1 = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
+        $scope.selected_rep2 = $scope.reps[$scope.selected.rep2.bioguide_id] # set rep1 to object from global scope
+
+    # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
+    $scope.check_if_rep_data_loaded()
+    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
+    $scope.selected.rep2 = $scope.selected.rep2 or {name: "Rep. Nanci Pelosi", bioguide_id: "P000197"}
+    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
+    $scope.$watch 'selected.rep2', $scope.check_if_rep_data_loaded
 
   ])

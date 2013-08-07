@@ -4,57 +4,12 @@ angular
   .module('influences.controllers')
   .controller('IndividualCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', ($rootScope, $scope, Api_get, $timeout)->
 
-    $scope.check_if_rep_data_loaded = ()->
-      if _.isEmpty($scope.reps)
-        $timeout($scope.check_if_rep_data_loaded, 500)
-      else
-        $scope.set_watchers_for_bioguide_id()
-        $scope.selected_rep = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
-
-    # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
-    $scope.check_if_rep_data_loaded()
-    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
-    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
+#####################
+# Define API Methods
+#####################
 
     $scope.get = {}
     $scope.callback = {}
-
-
-    # set default variables
-    $scope.loaded =
-      bio: false
-      committees: false
-      bills_sponsored: false
-      bills_cosponsored: false
-      modals: false
-      modals_check: ()->
-        if $scope.loaded.committees and $scope.loaded.bills_sponsored and $scope.loaded.bills_cosponsored
-          $scope.loaded.modals = true
-      contributors: false
-      industries: false
-      sectors: false
-      locale: false
-      type: false
-      words: false
-      reset: ()->
-        $scope.loaded.bio = false
-        $scope.loaded.committees = false
-        $scope.loaded.bills_sponsored = false
-        $scope.loaded.bills_cosponsored = false
-        $scope.loaded.modals = false
-        $scope.loaded.contributors = false
-        $scope.loaded.industries = false
-        $scope.loaded.sectors = false
-        $scope.loaded.locale = false
-        $scope.loaded.type = false
-        $scope.loaded.words = false
-    $scope.$watch 'loaded.bills_committees', $scope.loaded.modals_check
-    $scope.$watch 'loaded.bills_sponsored', $scope.loaded.modals_check
-    $scope.$watch 'loaded.bills_cosponsored', $scope.loaded.modals_check
-
-#####################
-#Define API Methods
-#####################
 
     $scope.get.transparencydata_id = ()->
       Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}&", $scope.callback.transparencydata_id, this
@@ -75,7 +30,6 @@ angular
     $scope.callback.bio = (error, data)->
       if not error
         $scope.selected_rep.bio = data
-        console.log data
         $scope.loaded.bio = true
       else console.log "Error: ", error
 
@@ -219,6 +173,41 @@ angular
       $scope.$watch 'selected_rep.transparencydata_id', $scope.get.type
 
 #####################
+# Loading Checks
+#####################
+
+    $scope.loaded =
+      bio: false
+      committees: false
+      bills_sponsored: false
+      bills_cosponsored: false
+      modals: false
+      modals_check: ()->
+        if $scope.loaded.committees and $scope.loaded.bills_sponsored and $scope.loaded.bills_cosponsored
+          $scope.loaded.modals = true
+      contributors: false
+      industries: false
+      sectors: false
+      locale: false
+      type: false
+      words: false
+      reset: ()->
+        $scope.loaded.bio = false
+        $scope.loaded.committees = false
+        $scope.loaded.bills_sponsored = false
+        $scope.loaded.bills_cosponsored = false
+        $scope.loaded.modals = false
+        $scope.loaded.contributors = false
+        $scope.loaded.industries = false
+        $scope.loaded.sectors = false
+        $scope.loaded.locale = false
+        $scope.loaded.type = false
+        $scope.loaded.words = false
+    $scope.$watch 'loaded.bills_committees', $scope.loaded.modals_check
+    $scope.$watch 'loaded.bills_sponsored', $scope.loaded.modals_check
+    $scope.$watch 'loaded.bills_cosponsored', $scope.loaded.modals_check
+
+#####################
 # Define Modals and Options
 #####################
 
@@ -233,5 +222,21 @@ angular
     $scope.modal_options =
       backdropFade: true
       dialogFade:true
+
+#####################
+# Initialize
+#####################
+
+    $scope.check_if_rep_data_loaded = ()->
+      if _.isEmpty($scope.reps)
+        $timeout($scope.check_if_rep_data_loaded, 500)
+      else
+        $scope.set_watchers_for_bioguide_id()
+        $scope.selected_rep = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
+
+    # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
+    $scope.check_if_rep_data_loaded()
+    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
+    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
 
   ])
