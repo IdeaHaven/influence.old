@@ -1,4 +1,15 @@
 <header>
-  <a class="button-to-overview" href="#/overview"><button class="btn">Back</button></a>
-  <h1>Influences Exerted on {{selected.rep1.name}}</h1><input type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Change Selection"><input type="text" ng-model="selected.rep2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Compare to ..."><a class="button-to-comparison" href="#/comparison"><button class="btn">Compare</button></a>
+  <div class="row-fluid">
+    <div class="span1">
+      <a href="#/overview"><button class="btn button-nav">Back</button></a>
+    </div>
+    <div class="span6">
+      <input class="title" type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Change Selection">
+    </div>
+    <div class="span5">
+      <input type="text" ng-model="selected.rep2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Compare to ...">
+      <a href="#/comparison"><button class="btn button-nav">Compare</button></a>
+    </div>
 </header>
+
+
