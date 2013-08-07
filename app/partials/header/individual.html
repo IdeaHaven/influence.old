@@ -1,14 +1,15 @@
 <header>
   <div class="row-fluid">
-    <div class="span1">
-      <a href="#/overview"><button class="btn button-nav">Back</button></a>
+    <div class="span2">
+      <a href="#/overview" class="btn button-nav"><i class="icon-backward"></i> Back</a>
     </div>
-    <div class="span6">
+    <div class="span5 input-prepend">
+      <i class="icon-edit"></i>
       <input class="title" type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Change Selection">
     </div>
     <div class="span5">
       <input type="text" ng-model="selected.rep2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Compare to ...">
-      <a href="#/comparison"><button class="btn button-nav">Compare</button></a>
+      <a href="#/comparison" class="btn button-nav">Compare <i class="icon-forward"></i></a>
     </div>
 </header>
 
