@@ -2,7 +2,7 @@
 
 angular
   .module('influences.controllers')
-  .controller('ComparisonCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', ($rootScope, $scope, Api_get, $timeout)->
+  .controller('ComparisonCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', '$routeParams', ($rootScope, $scope, Api_get, $timeout, $routeParams)->
 
 #####################
 #Define API Methods
@@ -145,9 +145,20 @@ angular
       if _.isEmpty($scope.reps)
         $timeout($scope.check_if_rep_data_loaded, 500)
       else
+        check_route_params()
+
+
+    check_route_params = _.once(()->
+      # check route params for rep ids
+      if $routeParams.bioguide_id1 and $routeParams.bioguide_id2
+        $scope.selected.rep1 = {name: $scope.reps[$routeParams.bioguide_id1].overview.fullname, bioguide_id: $routeParams.bioguide_id1}
+        $scope.selected.rep2 = {name: $scope.reps[$routeParams.bioguide_id2].overview.fullname, bioguide_id: $routeParams.bioguide_id2}
+        $scope.set_watchers_for_bioguide_id()
+      else # set default reps
         $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
         $scope.selected.rep2 = $scope.selected.rep2 or {name: "Rep. Nanci Pelosi", bioguide_id: "P000197"}
         $scope.set_watchers_for_bioguide_id()
+    )
 
     # init
     $scope.check_if_rep_data_loaded()
