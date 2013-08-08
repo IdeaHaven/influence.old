@@ -88,17 +88,15 @@ angular
 # Define Watchers
 #####################
 
-    build_watchers_for_bioguide_id = ()->
+    $scope.set_watchers_for_bioguide_id = _.once(()->
       $scope.$watch 'selected.rep1', $scope.get.bioguidedata
       $scope.$watch 'selected.rep2', $scope.get.bioguidedata
+    )
 
-    $scope.set_watchers_for_bioguide_id = _.once(build_watchers_for_bioguide_id)
-
-    build_watchers_for_transparencydata_id = ()->
+    $scope.set_watchers_for_transparencydata_id = _.once(()->
       $scope.$watch 'selected_rep1', $scope.get.transparencydata
       $scope.$watch 'selected_rep2', $scope.get.transparencydata
-
-    $scope.set_watchers_for_transparencydata_id = _.once(build_watchers_for_transparencydata_id)
+    )
 
     $scope.get.bioguidedata = ()->
       $scope.loaded.reset_all()
@@ -147,11 +145,11 @@ angular
       if _.isEmpty($scope.reps)
         $timeout($scope.check_if_rep_data_loaded, 500)
       else
+        $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
+        $scope.selected.rep2 = $scope.selected.rep2 or {name: "Rep. Nanci Pelosi", bioguide_id: "P000197"}
         $scope.set_watchers_for_bioguide_id()
 
-    # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
+    # init
     $scope.check_if_rep_data_loaded()
-    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
-    $scope.selected.rep2 = $scope.selected.rep2 or {name: "Rep. Nanci Pelosi", bioguide_id: "P000197"}
 
   ])
