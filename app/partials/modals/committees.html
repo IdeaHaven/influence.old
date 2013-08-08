@@ -8,18 +8,20 @@
         <tr>
           <th>Name</th>
           <th>Sub-Committee</th>
+          <th>Info</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="committee in selected_rep.committees">
           <td>{{committee.name}}</td>
           <td>{{committee.subcommittee}}</td>
-          <td><a href="http://www.govtrack.us/congress/committees/{{committee.committee_id}}" target="_blank">Link</a></td>
+          <td class="span1"><a href="http://www.govtrack.us/congress/committees/{{committee.committee_id}}" target="_blank">Link <i class="icon-share"></i></a></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-warning cancel" ng-click="modal_close('committees')">Close</button>
+    <span><i class="icon-share"></i> External Site</span>
+    <button class="btn btn-warning cancel" ng-click="modal_close('committees')">Close</button>
   </div>
 </div>

@@ -63,6 +63,7 @@ angular
               .on("click", (d, i)->
                 scope.$apply(scope.$parent.selected.industry = scope.$parent.industry.top[i])
                 scope.$parent.modal_open 'reps_by_industry'
+                scope.$parent.selected.rep1 = {}
               )
               .on("mouseout", (()-> div.transition().style("opacity", 1e-6)) )
 

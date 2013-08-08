@@ -4,8 +4,8 @@
       <a href="#/overview" class="btn button-nav"><i class="icon-backward"></i> Back</a>
     </div>
     <div class="span5 input-prepend">
-      <i class="icon-edit"></i>
-      <input class="title" type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Change Selection">
+      <i class="icon-pencil"></i>
+      <input class="title" type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8">
     </div>
     <div class="span5">
       <input type="text" ng-model="selected.rep2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Compare to ...">

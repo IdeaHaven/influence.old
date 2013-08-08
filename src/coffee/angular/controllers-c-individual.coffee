@@ -260,6 +260,6 @@ angular
 
     # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
     $scope.check_if_rep_data_loaded()
-    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
+    $scope.$watch 'selected.rep1', $scope.set_watchers_for_bioguide_id()
 
   ])
