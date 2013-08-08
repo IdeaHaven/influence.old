@@ -33,7 +33,7 @@ angular
             .attr("d", path)
 
       sizeChange = ()->
-        width = parseInt(d3.select("h3").style('width'))
+        width = parseInt(d3.select("#mapHolder").style('width'))
         d3.select("g")
           .attr("transform", "scale(#{width/900})")
         angular.element(window)[0].innerWidth
