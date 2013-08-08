@@ -3,7 +3,7 @@
 <div class="row-fluid">
   <div class="span6">
     <h3>View by Representative</h3>
-    <d3-map class="d3"></d3-map><br />
+    <d3-map class="d3"><div id="mapHolder"></div></d3-map><br />
     <input type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Find by Name"><br />
     <a href="#/individual?bioguide_id={{selected.rep1.bioguide_id}}" class="btn button-nav">{{selected.rep1.name}} <i class="icon-forward"></i></a><br />
     <sub-view template="search/zip"></sub-view>

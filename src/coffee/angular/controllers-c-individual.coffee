@@ -92,6 +92,9 @@ angular
     $scope.callback.industries = (error, data)->
       if not error
         $scope.selected_rep.funding = $scope.selected_rep.funding or {}
+        for industry in data.json
+          industry.name = industry.name.toLowerCase()
+          # industry.name = industry.name.splice()
         $scope.selected_rep.funding.industries = data.json
         $scope.loaded.industries = true
       else console.log "Error: ", error
