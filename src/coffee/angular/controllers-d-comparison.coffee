@@ -12,8 +12,9 @@ angular
     $scope.callback = {}
 
     $scope.get.transparencydata_id = ()->
-      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep1.overview.bioguide_id}&", $scope.callback.transparencydata_id, this, "selected_rep1"
-      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep2.overview.bioguide_id}&", $scope.callback.transparencydata_id, this, "selected_rep2"
+      if not $scope.loaded.transparencydata_id
+        Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep1.overview.bioguide_id}&", $scope.callback.transparencydata_id, this, "selected_rep1"
+        Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep2.overview.bioguide_id}&", $scope.callback.transparencydata_id, this, "selected_rep2"
 
     $scope.callback.transparencydata_id = (error, data, rep)->
       if not error
@@ -23,7 +24,8 @@ angular
       else console.log "Error: ", error
 
     $scope.get.bills = ()->
-      Api_get.congress "bills?sponsor_id__in=#{$scope.selected_rep1.overview.bioguide_id}|#{$scope.selected_rep2.overview.bioguide_id}&cosponsor_ids__in=#{$scope.selected_rep1.overview.bioguide_id}|#{$scope.selected_rep2.overview.bioguide_id}&per_page=50", $scope.callback.bills, this
+      if not $scope.loaded.bills
+        Api_get.congress "bills?sponsor_id__in=#{$scope.selected_rep1.overview.bioguide_id}|#{$scope.selected_rep2.overview.bioguide_id}&cosponsor_ids__in=#{$scope.selected_rep1.overview.bioguide_id}|#{$scope.selected_rep2.overview.bioguide_id}&per_page=50", $scope.callback.bills, this
 
     $scope.callback.bills = (error, data)->
       if not error
@@ -34,8 +36,9 @@ angular
       else console.log "Error: ", error
 
     $scope.get.contributors = ()->
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep1.transparencydata_id}/contributors.json?cycle=2012&limit=100&", $scope.callback.contributors, this, "selected_rep1"
-      Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors.json?cycle=2012&limit=100&", $scope.callback.contributors, this, "selected_rep2"
+      if not $scope.loaded.contributors
+        Api_get.influence "aggregates/pol/#{$scope.selected_rep1.transparencydata_id}/contributors.json?cycle=2012&limit=100&", $scope.callback.contributors, this, "selected_rep1"
+        Api_get.influence "aggregates/pol/#{$scope.selected_rep2.transparencydata_id}/contributors.json?cycle=2012&limit=100&", $scope.callback.contributors, this, "selected_rep2"
 
     $scope.callback.contributors = (error, data, rep)->
       if not error
