@@ -1,7 +1,6 @@
-<div class="component">
   <div class="row-fluid">
     <div class="span12">
-      <h4>Currently {{selected_rep.overview.last_name}} </h4>
+      <h5>{{selected_rep.overview.title}}. {{selected_rep.overview.last_name}} currently</h5>
       <ng-switch on="selected_rep.overview.leader">
         <div ng-switch-when="false">
           <button class="btn" ng-click="modal_open('committees')">Serves on {{selected_rep.committees.length}} Committees</button>
@@ -15,7 +14,6 @@
       <sub-view template="modals/bills_sponsored"></sub-view>
       <button class="btn" ng-click="modal_open('bills_cosponsored')">Co-Sponsored {{selected_rep.bills.cosponsored.length}} Bills</button>
       <sub-view template="modals/bills_cosponsored"></sub-view>
-      <br /><spanp>For more information click on the buttons above.</p>
+      <br /><span>For more information click on the buttons above.</span>
     </div>
   </div>
-</div>

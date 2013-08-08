@@ -1,13 +1,10 @@
-<div class="component">
-  <h2>Bio and General Information</h2>
-  <div class="row-fluid">
-    <div class="span2">
-      <img src="https://s3.amazonaws.com/assets.sunlightfoundation.com/moc/200x250/{{selected_rep.overview.bioguide_id}}.jpg" width="100%"/>
-    </div>
-    <div class="span10" ng-bind-html-unsafe="selected_rep.bio.metadata.bio"></div>
+<div class="row-fluid">
+  <div class="span2">
+    <img src="https://s3.amazonaws.com/assets.sunlightfoundation.com/moc/200x250/{{selected_rep.overview.bioguide_id}}.jpg" width="100%"/>
   </div>
-  <div class="row-fluid">
-    <span>{{selected_rep.overview.chamber}} Member Representing {{selected_rep.overview.state_name}} until {{selected_rep.overview.term_end}}</span><br />
-    <span>Contact: Phone: <a href="tel:{{selected_rep.overview.phone}}">{{selected_rep.overview.phone}}</a>, Fax: <a href="tel:{{selected_rep.overview.fax}}">{{selected_rep.overview.phone}}</a>, <a href="{{selected_rep.overview.website}}" target="_blank">Website</a>, <a href="https://twitter.com/{{selected_rep.overview.twitter_id}}" target="_blank">Twitter</a>, <a href="https://www.facebook.com/{{selected_rep.overview.facebook_id}}" target="_blank">Facebook</a>, <a href="https://www.youtube.com/{{selected_rep.overview.youtube_id}}" target="_blank">Youtube</a></span><br />
-  </div>
+  <div class="span10" ng-bind-html-unsafe="selected_rep.bio.metadata.bio"></div>
+</div>
+<div class="row-fluid">
+  <span>{{selected_rep.overview.chamber}} Member Representing {{selected_rep.overview.state_name}} until {{selected_rep.overview.term_end}}</span><br />
+  <span>Contact: Phone: <a href="tel:{{selected_rep.overview.phone}}">{{selected_rep.overview.phone}}</a>, Fax: <a href="tel:{{selected_rep.overview.fax}}">{{selected_rep.overview.phone}}</a>, <a href="{{selected_rep.overview.website}}" target="_blank">Website</a>, <a href="https://twitter.com/{{selected_rep.overview.twitter_id}}" target="_blank">Twitter</a>, <a href="https://www.facebook.com/{{selected_rep.overview.facebook_id}}" target="_blank">Facebook</a>, <a href="https://www.youtube.com/{{selected_rep.overview.youtube_id}}" target="_blank">Youtube</a></span><br />
 </div>
