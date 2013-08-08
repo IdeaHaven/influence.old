@@ -5,7 +5,7 @@
     <h3>View by Representative</h3>
     <d3-map class="d3"></d3-map><br />
     <input type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Find by Name"><br />
-    <a class="button-to-individual" href="#/individual"><button class="btn">View Selected Rep</button></a><br />
+    <a class="button-nav" href="#/individual"><button class="btn">View Selected Rep</button></a><br />
     <sub-view template="search/zip"></sub-view>
   </div>
   <div class="span6">
@@ -18,9 +18,9 @@
       <div ng-switch-when="true">
         <d3-pie-chart-overview class="d3 span10 push1" data="industry.top" number="amount" text="name"></d3-bar-chart>
       </div>
+      <sub-view template="modals/reps_by_industry"></sub-view>
     </ng-switch>
     <input type="text" ng-model="selected.sector" placeholder="Sector - Not Working Yet"><br />
     <input type="text" ng-model="selected.company" placeholder="Company - Not Working Yet">
   </div>
 </div>
-{{selected}}

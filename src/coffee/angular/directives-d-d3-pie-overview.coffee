@@ -60,7 +60,10 @@ angular
                 .style("top", (d3.event.pageY) + "px")
                 .html("Sector: #{d.data.name}<br />Amount: <strong>$#{Math.round(d.data.amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong><br />Number of Contributions: #{d.data.count}")
               )
-              .on("click", ((d, i)-> scope.$apply(scope.$parent.selected.industry = scope.$parent.industry.top[i])) )
+              .on("click", (d, i)->
+                scope.$apply(scope.$parent.selected.industry = scope.$parent.industry.top[i])
+                scope.$parent.modal_open 'reps_by_industry'
+              )
               .on("mouseout", (()-> div.transition().style("opacity", 1e-6)) )
 
           g.append("path")

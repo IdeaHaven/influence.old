@@ -12,7 +12,9 @@ angular
       # $rootScope.reps_names_list
 
     # init local variable
-    $scope.loaded = {industry_top: false}
+    $scope.loaded =
+      industry_top: false
+      industry_to_reps: false
     $scope.get = {}
     $scope.callback = {}
 
@@ -30,6 +32,18 @@ angular
         $scope.loaded.industry_top = true
       else console.log "Error: ", error
 
+    $scope.get.reps_by_industry = ()->
+      Api_get.influence "aggregates/org/#{$scope.selected.industry.id}/recipients.json?cycle=2012&limit=25&", $scope.callback.reps_by_industry, this
+
+    $scope.callback.reps_by_industry = (error, data)->
+      if not error
+        $scope.industry = $scope.industry or {}
+        for industry in data.json
+          industry.total = '$' + Math.round(industry.total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        $scope.industry.to_reps = data.json
+        $scope.loaded.industry_to_reps = true
+      else console.log "Error: ", error
+
     $scope.get.reps_by_zip = ()->
       Api_get.congress "legislators/locate?zip=#{$scope.selected.zip}", $scope.callback.reps_by_zip, this
 
@@ -45,6 +59,26 @@ angular
 # Define UI Methods
 ######################
 
+    $scope.set = {}
+
+    $scope.set.rep_by_zip = (rep)->
+      $scope.selected.rep1 = rep
+
+#####################
+# Define Modals and Options
+#####################
+
+    $scope.modal_should_be_open = {}
+
+    $scope.modal_open = (modal)->
+      $scope.$apply($scope.modal_should_be_open[modal] = true)
+
+    $scope.modal_close = (modal)->
+      $scope.modal_should_be_open[modal] = false
+
+    $scope.modal_options =
+      backdropFade: true
+      dialogFade:true
 
 ######################
 # Initial Method Calls
@@ -52,6 +86,7 @@ angular
 
     # initial function calls
     $scope.$watch 'selected.zip', $scope.get.reps_by_zip
+    $scope.$watch 'selected.industry', $scope.get.reps_by_industry
     $scope.get.top_industries()
 
   ])

@@ -1,4 +1,4 @@
 <input name="zip" ng-model="selected.zip" type="text" value={{zip}} placeholder="Find by Zip Code">
 <div ng-repeat="rep in reps_by_zip">
-  {{rep.name}}
+  <a href="#/individual?bioguide_id={{rep.bioguide_id}}" ng-click="set.rep_by_zip({{rep}})" class="btn button-nav">{{rep.name}} <i class="icon-forward"></i></a>
 </div>

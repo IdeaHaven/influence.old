@@ -1,0 +1,27 @@
+<div modal="modal_should_be_open.reps_by_industry" close="modal_close('reps_by_industry')" options="modal_options">
+  <div class="modal-header">
+    <h3>Top Recipients from the {{selected.industry.name}} industry.</h3>
+  </div>
+  <div class="modal-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="rep in industry.to_reps">
+          <td>{{rep.name}}</td>
+          <td>{{rep.total}}</td>
+          <td>{{rep.state}}</td>
+          <td ng-click="modal_close('reps_by_industry')"><a href="#/individual?id={{rep.id}}"> >> </a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning cancel" ng-click="modal_close('reps_by_industry')">Close</button>
+  </div>
+</div>

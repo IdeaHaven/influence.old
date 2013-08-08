@@ -2,7 +2,7 @@
 
 angular
   .module('influences.controllers')
-  .controller('IndividualCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', ($rootScope, $scope, Api_get, $timeout)->
+  .controller('IndividualCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', '$routeParams', ($rootScope, $scope, Api_get, $timeout, $routeParams)->
 
 #####################
 # Define API Methods
@@ -236,8 +236,20 @@ angular
         $scope.selected_rep = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
 
     # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
-    $scope.check_if_rep_data_loaded()
-    $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
-    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
+    init = ()->
+      $scope.check_if_rep_data_loaded()
+      $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
+
+    # check route params for rep ids
+    if $routeParams.bioguide_id
+      console.log 'find info by bioguide_id'
+      init()
+    else if $routeParams.id
+      console.log 'find info by id'
+      init()
+    else # set default rep
+      $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
+      init()
+
 
   ])
