@@ -33,7 +33,8 @@ angular
       else console.log "Error: ", error
 
     $scope.get.reps_by_industry = ()->
-      Api_get.influence "aggregates/org/#{$scope.selected.industry.id}/recipients.json?cycle=2012&limit=25&", $scope.callback.reps_by_industry, this
+      if $scope.selected.industry
+        Api_get.influence "aggregates/org/#{$scope.selected.industry.id}/recipients.json?cycle=2012&limit=25&", $scope.callback.reps_by_industry, this
 
     $scope.callback.reps_by_industry = (error, data)->
       if not error
@@ -45,7 +46,8 @@ angular
       else console.log "Error: ", error
 
     $scope.get.reps_by_zip = ()->
-      Api_get.congress "legislators/locate?zip=#{$scope.selected.zip}", $scope.callback.reps_by_zip, this
+      if $scope.selected.zip
+        Api_get.congress "legislators/locate?zip=#{$scope.selected.zip}", $scope.callback.reps_by_zip, this
 
     $scope.callback.reps_by_zip = (error, data)->
       if not error

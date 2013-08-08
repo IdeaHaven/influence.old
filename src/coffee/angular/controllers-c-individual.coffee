@@ -12,7 +12,8 @@ angular
     $scope.callback = {}
 
     $scope.get.transparencydata_id = ()->
-      Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}&", $scope.callback.transparencydata_id, this
+      if $scope.selected_rep.overview.bioguide_id
+        Api_get.influence "entities/id_lookup.json?bioguide_id=#{$scope.selected_rep.overview.bioguide_id}&", $scope.callback.transparencydata_id, this
 
     $scope.callback.transparencydata_id = (error, data)->
       if not error
@@ -25,7 +26,8 @@ angular
       else console.log "Error: ", error
 
     $scope.get.bio = ()->
-      Api_get.influence "entities/#{$scope.selected_rep.transparencydata_id}.json?", $scope.callback.bio, this
+      if $scope.selected_rep.transparencydata_id
+        Api_get.influence "entities/#{$scope.selected_rep.transparencydata_id}.json?", $scope.callback.bio, this
 
     $scope.callback.bio = (error, data)->
       if not error
@@ -228,28 +230,36 @@ angular
 # Initialize
 #####################
 
+    route_params_id_bio_callback = (error, data)->
+      if not error
+        $scope.selected_rep = $scope.reps[data.metadata.bioguide_id]
+        $scope.selected.rep1 = {name: $scope.selected_rep.overview.fullname, bioguide_id: $scope.selected_rep.overview.bioguide_id}
+        $scope.set_watchers_for_bioguide_id()
+        $scope.selected_rep.bio = data
+        $scope.loaded.bio = true
+      else console.log "Error: ", error
+
+    check_route_params = _.once(()->
+      # check route params for rep ids
+      if $routeParams.bioguide_id
+        $scope.selected_rep = $scope.reps[$routeParams.bioguide_id]
+        $scope.selected.rep1 = {name: $scope.selected_rep.overview.fullname, bioguide_id: $scope.selected_rep.overview.bioguide_id}
+        $scope.set_watchers_for_bioguide_id()
+      else if $routeParams.id
+        Api_get.influence "entities/#{$routeParams.id}.json?", route_params_id_bio_callback, this
+
+      else # set default rep
+        $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
+    )
+
     $scope.check_if_rep_data_loaded = ()->
       if _.isEmpty($scope.reps)
         $timeout($scope.check_if_rep_data_loaded, 500)
       else
-        $scope.set_watchers_for_bioguide_id()
-        $scope.selected_rep = $scope.reps[$scope.selected.rep1.bioguide_id] # set rep1 to object from global scope
+        check_route_params()
 
     # init check for rep data, check for a selected rep, watch for changes to selected rep, init scope variables
-    init = ()->
-      $scope.check_if_rep_data_loaded()
-      $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
-
-    # check route params for rep ids
-    if $routeParams.bioguide_id
-      console.log 'find info by bioguide_id'
-      init()
-    else if $routeParams.id
-      console.log 'find info by id'
-      init()
-    else # set default rep
-      $scope.selected.rep1 = $scope.selected.rep1 or {name: "Rep. John Boehner", bioguide_id: "B000589"}
-      init()
-
+    $scope.check_if_rep_data_loaded()
+    $scope.$watch 'selected.rep1', $scope.check_if_rep_data_loaded
 
   ])
