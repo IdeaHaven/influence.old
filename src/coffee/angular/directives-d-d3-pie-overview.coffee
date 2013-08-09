@@ -71,9 +71,9 @@ angular
                 .html("Sector: #{d.data.name}<br />Amount: <strong>#{num_to_dollars(d.data.amount)}</strong><br />Number of Contributions: #{d.data.count}")
               )
               .on("click", (d, i)->
-                scope.$apply(scope.$parent.selected.industry = scope.$parent.industry.top[i])
+                scope.$apply($rootScope.selected.industry = scope.$parent.industry.top[i])
                 scope.$parent.modal_open 'reps_by_industry'
-                scope.$parent.selected.rep1 = {}
+                $rootScope.selected.rep1 = {}
               )
               .on("mouseout", (()-> tooltip_div.transition().style("opacity", 1e-6)) )
 
