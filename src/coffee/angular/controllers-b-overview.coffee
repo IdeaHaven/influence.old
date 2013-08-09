@@ -1,6 +1,6 @@
 angular
   .module('influences.controllers')
-  .controller('OverviewCtrl', ['$rootScope', '$scope', 'Api_get', 'To_pretty', ($rootScope, $scope, Api_get, To_pretty)->
+  .controller('OverviewCtrl', ['$rootScope', '$scope', 'Api_get', 'To_pretty', '$routeParams', ($rootScope, $scope, Api_get, To_pretty, $routeParams)->
 
 ######################
 # Variable Setup
@@ -90,6 +90,7 @@ angular
 ######################
 
     # initial function calls
+    $scope.selected.zip = $routeParams.zip
     $scope.$watch 'selected.zip', $scope.get.reps_by_zip
     $scope.$watch 'selected.industry', $scope.get.reps_by_industry
     $scope.get.top_industries()
