@@ -232,7 +232,7 @@ angular
     route_params_id_bio_callback = (error, data)->
       if not error
         console.log $scope.reps[data.metadata.bioguide_id]
-        if $scope.reps[data.metadata.bioguide_id] is not undefined
+        unless $scope.reps[data.metadata.bioguide_id] is undefined
           $scope.selected.rep1 = {name: $scope.reps[data.metadata.bioguide_id].overview.fullname, bioguide_id: data.metadata.bioguide_id}
           $scope.set_watchers_for_bioguide_id()
         else
