@@ -45,13 +45,14 @@
     </div>
     <div class="row-fluid">
       <div class="span12">
+        <!-- load modal before the d3 graoh it is called from -->
+        <sub-view template="modals/reps_by_industry"></sub-view>
         <ng-switch on="loaded.industry_top">
           <div ng-switch-when="false">
             <sub-view template="loading"></sub-view>
           </div>
           <div ng-switch-when="true">
             <d3-pie-chart-overview class="d3 span10 push1" data="industry.top" number="amount" text="name"></d3-bar-chart>
-            <sub-view template="modals/reps_by_industry"></sub-view>
           </div>
         </ng-switch>
       </div>
