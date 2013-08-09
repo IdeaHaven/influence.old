@@ -3,14 +3,13 @@
 angular
   .module('influences.services', [])
   .value('version', production: '0.6.0')
-  .value('attribution',
+  .value 'attribution',
     source:
       url: "http://sunlightfoundation.com/"
       name: "Sunlight Foundation"
     license:
       url: "http://sunlightlabs.github.io/datacommons/"
       name: "Various"
-  )
   .factory 'Api_get', ['$http', ($http)->
     congress: (path, callback, context)->
       args = Array.prototype.slice.call(arguments, 2)
@@ -58,3 +57,18 @@ angular
       .error (data, status, headers, config)->
         callback "Error pulling #{path} from Sunlight Influence Explorer API", null
   ]
+
+angular
+  .module('influences.services')
+  .factory('To_pretty', [()->
+    num_to_dollars: (num)->
+      if typeof num is "number"
+        return '$' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      else
+        pnum = parseInt(num)
+        unless isNaN(pnum)
+          return '$' + Math.round(pnum).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        else
+          console.warn "Not a number: ", num
+          return num
+  ])

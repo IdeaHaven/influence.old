@@ -1,6 +1,6 @@
 angular
   .module('influences.controllers')
-  .controller('OverviewCtrl', ['$rootScope', '$scope', 'Api_get', ($rootScope, $scope, Api_get)->
+  .controller('OverviewCtrl', ['$rootScope', '$scope', 'Api_get', 'To_pretty', ($rootScope, $scope, Api_get, To_pretty)->
 
 ######################
 # Variable Setup
@@ -17,6 +17,9 @@ angular
       industry_to_reps: false
     $scope.get = {}
     $scope.callback = {}
+
+    # init services
+    num_to_dollars = To_pretty.num_to_dollars
 
 ######################
 # Define API Methods
@@ -40,7 +43,7 @@ angular
       if not error
         $scope.industry = $scope.industry or {}
         for industry in data.json
-          industry.total = '$' + Math.round(industry.total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          industry.total = num_to_dollars(industry.total_amount)
         $scope.industry.to_reps = data.json
         $scope.loaded.industry_to_reps = true
       else console.log "Error: ", error

@@ -3,7 +3,10 @@
 ################
 angular
   .module('influences.directives')
-  .directive('d3BarChart', [()->
+  .directive('d3BarChart', ['To_pretty', (To_pretty)->
+
+    # init services
+    num_to_dollars = To_pretty.num_to_dollars
 
     restrict: 'E'
     scope:
@@ -48,7 +51,7 @@ angular
               .attr("fill", "Black")
               .attr("y", ((d, i)-> i * 30 + 18) )
               .attr("x", 10)
-              .text( ((d)-> "$#{Math.round(d[attrs.number]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");}: #{d[attrs.text]}") )
+              .text( ((d)-> "#{num_to_dollars(d[attrs.number])}: #{d[attrs.text]}") )
 
       # initial run
       scope.drawD3()

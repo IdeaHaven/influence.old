@@ -3,7 +3,10 @@
 ###########################
 angular
   .module('influences.directives')
-  .directive('d3PieChartOverview', [($rootScope)->
+  .directive('d3PieChartOverview', ['$rootScope', 'To_pretty', ($rootScope, To_pretty)->
+
+    # init services
+    num_to_dollars = To_pretty.num_to_dollars
 
     restrict: 'E'
     scope:
@@ -58,7 +61,7 @@ angular
                 div
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY) + "px")
-                .html("Sector: #{d.data.name}<br />Amount: <strong>$#{Math.round(d.data.amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strong><br />Number of Contributions: #{d.data.count}")
+                .html("Sector: #{d.data.name}<br />Amount: <strong>#{num_to_dollars(d.data.amount)}</strong><br />Number of Contributions: #{d.data.count}")
               )
               .on("click", (d, i)->
                 scope.$apply(scope.$parent.selected.industry = scope.$parent.industry.top[i])
@@ -96,7 +99,7 @@ angular
           g.append("text")
             .attr("transform", "translate(#{-1 * radius / 4}, 10)")
             .attr("font-size", "x-large")
-            .text("$#{Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}")
+            .text(num_to_dollars(total))
 
       # initial run
       scope.drawD3()

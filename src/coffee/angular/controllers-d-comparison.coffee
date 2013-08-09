@@ -2,14 +2,28 @@
 
 angular
   .module('influences.controllers')
-  .controller('ComparisonCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', '$routeParams', ($rootScope, $scope, Api_get, $timeout, $routeParams)->
+  .controller('ComparisonCtrl', ['$rootScope', '$scope', 'Api_get', '$timeout', '$routeParams', 'To_pretty', ($rootScope, $scope, Api_get, $timeout, $routeParams, To_pretty)->
+
+######################
+# Variable Setup
+######################
+
+    # these were defined in AppCtrl and $scope will delegate to $rootScope
+      # $rootScope.reps
+      # $rootScope.selected
+      # $rootScope.reps_names_list
+
+    # init local variable
+    $scope.get = {}
+    $scope.callback = {}
+
+    # init services
+    num_to_dollars = To_pretty.num_to_dollars
+
 
 #####################
 #Define API Methods
 #####################
-
-    $scope.get = {}
-    $scope.callback = {}
 
     $scope.get.transparencydata_id = ()->
       if not $scope.loaded.transparencydata_id
@@ -72,7 +86,7 @@ angular
                 employee_count: val.employee_count
                 total_amount: val.total_amount
                 total_count: val.total_count
-                total: "$ " + Math.round(val.total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                total: num_to_dollars(val.total_amount)
               rep1:
                 direct_amount: $scope.selected_rep1.funding.contributors[comp[val.id]].direct_amount
                 direct_count: $scope.selected_rep1.funding.contributors[comp[val.id]].direct_count
@@ -80,7 +94,7 @@ angular
                 employee_count: $scope.selected_rep1.funding.contributors[comp[val.id]].employee_count
                 total_amount: $scope.selected_rep1.funding.contributors[comp[val.id]].total_amount
                 total_count: $scope.selected_rep1.funding.contributors[comp[val.id]].total_count
-                total: "$ " + Math.round($scope.selected_rep1.funding.contributors[comp[val.id]].total_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                total: num_to_dollars($scope.selected_rep1.funding.contributors[comp[val.id]].total_amount)
       )
       if _.isEmpty(both)
         both = [{name: "We found no contributors in common while comparing the top 100 contributors with donations over $1000"}]

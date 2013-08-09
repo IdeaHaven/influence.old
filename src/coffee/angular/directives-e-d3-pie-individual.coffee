@@ -3,7 +3,10 @@
 ###########################
 angular
   .module('influences.directives')
-  .directive('d3PieChartIndividual', [()->
+  .directive('d3PieChartIndividual', ['To_pretty', (To_pretty)->
+
+    # init services
+    num_to_dollars = To_pretty.num_to_dollars
 
     restrict: 'E'
     scope:
@@ -66,7 +69,7 @@ angular
 
           g.append("text")
             .attr("transform", "translate(#{-1 * radius / 5},5)")
-            .text("$#{Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}")
+            .text(num_to_dollars(total))
 
       # initial run
       scope.drawD3()
