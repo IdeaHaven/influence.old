@@ -1,5 +1,35 @@
 @import 'nib'
 
+///////////////////
+// Sticky Footer //
+///////////////////
+$footer_height = 60px
+$foo = 60px
+
+html, body
+  height 100%
+  padding 0
+  margin 0
+
+#push, #footer
+  height $footer_height
+
+#wrap
+  min-height 100%
+  margin 0 auto -1*$footer_height auto
+
+//repsonsive fix
+@media (max-width 767px)
+  #footer
+    margin-left -20px
+    margin-right -20px
+    padding-left 20px
+    padding-right 20px
+
+///////////////////
+// Other stuff   //
+///////////////////
+
 .button-nav
   vertical-align top
 
