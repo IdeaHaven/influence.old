@@ -98,16 +98,6 @@
         </ng-switch>
       </div>
       <div class="span6">
-        <ng-switch on="loaded.words">
-          <div ng-switch-when="false">
-            <sub-view template="loading"></sub-view>
-          </div>
-          <div ng-switch-when="true">
-            <div class="component">
-              <d3-word-cloud class="d3" data="selected_rep.words" count="count" word="ngram"></d3-word-cloud>
-            </div>
-          </div>
-        </ng-switch>
       </div>
     </div>
 

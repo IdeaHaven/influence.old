@@ -149,16 +149,6 @@ angular
         $scope.loaded.type = true
       else console.log "Error: ", error
 
-    # $scope.get.words = ()->
-    #   if not $scope.loaded.words
-    #     Api_get.words "phrases.json?entity_type=legislator&entity_value=B000589&page=0&sort=count%20desc", $scope.callback.words, this
-
-    # $scope.callback.words = (error, data)->
-    #   if not error
-    #     $scope.selected_rep.words = data.json
-    #     $scope.loaded.words = true
-    #   else console.log "Error: ", error
-
 #####################
 # Define Watchers
 #####################
@@ -207,7 +197,6 @@ angular
         $scope.loaded.sectors = false
         $scope.loaded.locale = false
         $scope.loaded.type = false
-        $scope.loaded.words = false
 
     $scope.loaded.reset_all()  # sets the vales for the first time
 
