@@ -2,25 +2,69 @@
 
 <div class="row-fluid">
   <div class="span6">
-    <h3>View by Representative</h3>
-    <d3-map class="d3"><div id="mapHolder"></div></d3-map><br />
-    <input type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Find by Name"><br />
-    <a href="#/individual?bioguide_id={{selected.rep1.bioguide_id}}" class="btn button-nav">{{selected.rep1.name}} <i class="icon-forward"></i></a><br />
-    <sub-view template="search/zip"></sub-view>
+    <div class="row-fluid">
+      <div class="span10">
+        <h3>Select a Representative</h3>
+      </div>
+      <div class="span2">
+        <h3>or</h3>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <d3-map class="d3"><div id="mapHolder"></div></d3-map>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <input type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Find by Name">
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <a href="#/individual?bioguide_id={{selected.rep1.bioguide_id}}" class="btn button-nav">{{selected.rep1.name}} <i class="icon-forward"></i></a>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <sub-view template="search/zip"></sub-view>
+      </div>
+    </div>
   </div>
   <div class="span6">
-    <h3>View by Influence</h3>
-    <h4>Top Industries by Contribution</h4>
-    <ng-switch on="loaded.industry_top">
-      <div ng-switch-when="false">
-        <sub-view template="loading"></sub-view>
+    <div class="row-fluid">
+      <div class="span12">
+        <h3>a Monetary Infuence</h3>
       </div>
-      <div ng-switch-when="true">
-        <d3-pie-chart-overview class="d3 span10 push1" data="industry.top" number="amount" text="name"></d3-bar-chart>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <h4>Industry contributions to candidates' campaigns</h4>
+        <h5>sorted by amount given in 2012</h5>
       </div>
-      <sub-view template="modals/reps_by_industry"></sub-view>
-    </ng-switch>
-    <input type="text" ng-model="selected.sector" placeholder="Sector - Not Working Yet"><br />
-    <input type="text" ng-model="selected.company" placeholder="Company - Not Working Yet">
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <ng-switch on="loaded.industry_top">
+          <div ng-switch-when="false">
+            <sub-view template="loading"></sub-view>
+          </div>
+          <div ng-switch-when="true">
+            <d3-pie-chart-overview class="d3 span10 push1" data="industry.top" number="amount" text="name"></d3-bar-chart>
+            <sub-view template="modals/reps_by_industry"></sub-view>
+          </div>
+        </ng-switch>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <input type="text" ng-model="selected.sector" placeholder="Sector - Not Working Yet">
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <input type="text" ng-model="selected.company" placeholder="Company - Not Working Yet">
+      </div>
+    </div>
   </div>
 </div>
