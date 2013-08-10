@@ -38,7 +38,7 @@ angular
 
           # create a div for the tooltip
           tooltip_div = d3.select(element[0]).append("div")
-            .attr("class", "tooltip")
+            .attr("class", "tooltip tooltip_pie")
             .style("opacity", 1e-6)
 
           # set the dimensions of the donut chart

@@ -7,7 +7,7 @@ angular
   .controller('AppCtrl', ['$rootScope', '$scope', 'version', 'attribution', 'Api_get', ($rootScope, $scope, version, attribution, Api_get)->
     # init global variables for all controllers to use
     $rootScope.reps = {}
-    $rootScope.selected = {rep1: null, rep2: null, zip: null, company: null, sector: null, industry: null}
+    $rootScope.selected = {rep1: null, rep2: null, zip: null, company: null, sector: null, industry: null, state: null, city: null}
     $rootScope.reps_names_list = []
 
     $scope.get_all_reps_in_office = ()->
