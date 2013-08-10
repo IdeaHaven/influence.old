@@ -1,16 +1,17 @@
 <header>
-  <div class="row-fluid">
-    <div class="span2">
-      <a href="#/overview?zip={{selected.zip}}" class="btn button-nav"><i class="icon-backward"></i> Back</a>
-    </div>
-    <div class="span5 input-prepend">
-      <i class="icon-pencil"></i>
-      <input class="title" type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8">
-    </div>
-    <div class="span5">
-      <input type="text" ng-model="selected.rep2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Compare to ...">
-      <a href="#/comparison?bioguide_id1={{selected.rep1.bioguide_id}}&bioguide_id2={{selected.rep2.bioguide_id}}" class="btn button-nav">Compare <i class="icon-forward"></i></a>
-    </div>
+  <div class="left">
+    <a href="#/overview?zip={{selected.zip}}" class="btn"><span class="button-nav"><i class="icon-circle-arrow-left"></i> Back</span></a>
+  </div>
+  <div class="left inline">
+    <form>
+      <i class="icon-edit icon-2x right"></i>
+      <input class="title left" type="text" ng-model="selected.rep1" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8">
+    </form>
+  </div>
+  <div class="right">
+    <input type="text" ng-model="selected.rep2" typeahead="rep as rep.name for rep in reps_names_list | filter:$viewValue | limitTo:8" placeholder="Compare to ...">
+    <a href="#/comparison?bioguide_id1={{selected.rep1.bioguide_id}}&bioguide_id2={{selected.rep2.bioguide_id}}" class="btn"><span class="button-nav">Compare <i class="icon-circle-arrow-right"></i></span></a>
+  </div>
 </header>
 
 

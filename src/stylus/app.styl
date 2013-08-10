@@ -1,10 +1,10 @@
 @import 'nib'
+@import url(http://fonts.googleapis.com/css?family=Oxygen:400,700)
 
 ///////////////////
 // Sticky Footer //
 ///////////////////
 $footer_height = 60px
-$foo = 60px
 
 html, body
   height 100%
@@ -27,16 +27,48 @@ html, body
     padding-right 20px
 
 ///////////////////
-// Other stuff   //
+// Basic Styles  //
 ///////////////////
 
-.button-nav
-  vertical-align top
+body
+  font-family: 'Oxygen', sans-serif
+
+.ajax_loader
+  position relative
+  margin 50px auto
+
+.right
+  float right
+
+.left
+  float left
+
+.clear
+  clear both
+
+.inline
+  display inline
+
+////////////////////
+// Header Styles  //
+////////////////////
 
 header
-  margin auto
-  position relative
-  border-bottom 1px solid black
+  padding 0 2rem
+  width 100%
+  border-bottom 0.1rem solid black
+  height 4rem
+  vertical-align middle
+  margin-top 1rem
+  .icon-edit
+    margin-right -0.5rem
+
+
+.button-nav
+  padding 0.5rem
+  font-size 1rem
+  height 2rem
+  line-height 2rem
 
 input.title
   border 0
@@ -44,9 +76,17 @@ input.title
   height 100%
   min-width: 100%
 
-header .input-prepend .icon-edit
-  margin-top 5px
+////////////////////
+// Footer Styles  //
+////////////////////
 
+///////////////////
+// Icons Styles  //
+///////////////////
+
+///////////////////////
+// Component Styles  //
+///////////////////////
 
 .component
   border-radius 5px
@@ -60,6 +100,13 @@ header .input-prepend .icon-edit
     padding 0 10px 10px 10px
     border-bottom 1px solid gray
     text-align center
+
+#mapHolder
+  margin:5px;
+
+//////////////////////
+// d3 Graph Styles  //
+//////////////////////
 
 .d3 > svg
   margin 10px 0
@@ -77,17 +124,14 @@ div.tooltip
   border-radius: 8px;
   pointer-events: none;
 
-.modal-footer > span
-  float: left
-
 .states
   fill: #aaa;
   stroke: #fff;
   stroke-width: 0.75px;
 
-#mapHolder
-  margin:5px;
+///////////////////
+// modal Styles  //
+///////////////////
 
-.ajax_loader
-  position relative
-  margin 50px auto
+.modal-footer > span
+  float: left
